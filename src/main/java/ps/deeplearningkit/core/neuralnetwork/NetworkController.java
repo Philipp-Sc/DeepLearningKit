@@ -87,7 +87,10 @@ public class NetworkController extends Preserving{
 	}
 	public void addNEATPopulation(String key,NEATPopulation pop) throws IOException{
 		neatPopulations.put(key, pop);
-		saveNEATPopulations();
+		// TODO: Why cant you save hyperNeatPops
+		if(!pop.isHyperNEAT()){
+			saveNEATPopulations();
+		}
 	}
 	public void saveAll() throws IOException{
 		saveBasicNetworks();

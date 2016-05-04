@@ -8,12 +8,13 @@ import org.encog.ml.data.basic.BasicMLData;
 import org.encog.ml.data.basic.BasicMLDataSet;
 import org.encog.ml.data.specific.BiPolarNeuralData;
 import org.encog.neural.art.ART1;
+import org.encog.neural.hyperneat.substrate.Substrate;
 import org.encog.neural.som.SOM;
 import org.encog.neural.som.training.basic.BasicTrainSOM;
 import org.encog.neural.som.training.basic.neighborhood.NeighborhoodRBF;
 
 public class Assistant {
-	
+		
 	public static int testSOM(SOM network,double[] data){
 		return network.classify(new BasicMLData(data));
 	}
@@ -85,7 +86,7 @@ public class Assistant {
 		}
 		return clusterART1(network, bits);
 	}
-	private static boolean[] toBinaryNumber(int number,int digits){
+	public static boolean[] toBinaryNumber(int number,int digits){
 		String binary=Integer.toBinaryString(number);
 		boolean[] binaryNumber=new boolean[Math.max(digits,binary.length())];
 		for(int i=0;i<binaryNumber.length;i++){

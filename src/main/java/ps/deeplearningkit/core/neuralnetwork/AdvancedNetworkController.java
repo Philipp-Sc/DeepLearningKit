@@ -1,35 +1,28 @@
 package ps.deeplearningkit.core.neuralnetwork;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.BitSet;
-
 import org.encog.Encog;
 import org.encog.engine.network.activation.ActivationLOG;
-import org.encog.engine.network.activation.ActivationStep;
 import org.encog.mathutil.rbf.RBFEnum;
 import org.encog.ml.CalculateScore;
-import org.encog.ml.MLMethod;
 import org.encog.ml.data.MLData;
-import org.encog.ml.data.MLDataSet;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.ml.data.basic.BasicMLDataSet;
 import org.encog.ml.data.specific.BiPolarNeuralData;
 import org.encog.ml.ea.train.EvolutionaryAlgorithm;
-import org.encog.ml.ea.train.basic.TrainEA;
 import org.encog.neural.art.ART1;
+import org.encog.neural.hyperneat.HyperNEATCODEC;
 import org.encog.neural.hyperneat.substrate.Substrate;
 import org.encog.neural.hyperneat.substrate.SubstrateFactory;
 import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.neat.NEATPopulation;
 import org.encog.neural.neat.NEATUtil;
+import org.encog.neural.neat.training.species.OriginalNEATSpeciation;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
 import org.encog.neural.som.SOM;
 import org.encog.neural.som.training.basic.BasicTrainSOM;
 import org.encog.neural.som.training.basic.neighborhood.NeighborhoodRBF;
-import org.encog.util.simple.EncogUtility;
 
 import ps.deeplearningkit.core.neurallearning.Ai;
 
@@ -112,24 +105,6 @@ public class AdvancedNetworkController extends NetworkController{
 		Ai train=new Ai(bn, bn.getInputCount(), bn.getOutputCount(), someScore, startTemp, stopTemp, cycles);
 		train.train(iterations);
 		this.saveBasicNetworks();
-	}
-	/** MOVE TO EASYNETWORKCONTROLLER
-	 * Trains the network with a reward function. 
-	 * No training set is needed. 
-	 * The network will learn on its own.
-	 * This variation uses NeuralSimulatedAnnealing.
-	 * @param key
-	 * @param someScore
-	 * @param startTemp
-	 * @param stopTemp
-	 * @param cycles
-	 * @param iterations
-	 * @throws IOException
-	 */
-	public void trainNewBasicNetwork(String key,int inputCount,int outputCount,CalculateScore someScore,int startTemp,int stopTemp,int cycles,int iterations) throws IOException{
-		Ai train=new Ai(null, inputCount, outputCount, someScore, startTemp, stopTemp, cycles);
-		train.train(iterations);
-		this.addBasicNetwork(key, train.getBasicNetwork());
 	}
 	/**
 	 * Computes the result based on the test input.
@@ -218,5 +193,46 @@ public class AdvancedNetworkController extends NetworkController{
 		final EvolutionaryAlgorithm train=NEATUtil.constructNEATTrainer(pop, score);
 		train.finishTraining();
 		return (NEATNetwork)train.getCODEC().decode(train.getBestGenome());
+	}
+	/**
+	 * HyperNeat Networks
+	 */
+	/**
+	 * Create a HyperNEATPopulation with a SandwichSubstrate.
+	 * @param key
+	 * @param populationSize
+	 * @param inputEdgeSize
+	 * @param outputEdgeSize
+	 * @throws IOException 
+	 */
+	public void createHyperNEATPopulation(String key,int populationSize,int inputEdgeSize,int outputEdgeSize) throws IOException{
+		Substrate theSubstrate=SubstrateFactory.factorSandwichSubstrate(inputEdgeSize, outputEdgeSize);
+		NEATPopulation pop=new NEATPopulation(theSubstrate, populationSize);
+		pop.reset();
+		pop.setActivationCycles(4);
+		this.addNEATPopulation(key,pop);
+	}
+	public void trainHyperNEATPopulation(String key,CalculateScore score,int scoreValue,int iterations) throws IOException{
+		NEATPopulation pop=this.getNEATPopulation(key);
+		if(pop.isHyperNEAT()){
+			final EvolutionaryAlgorithm train=NEATUtil.constructNEATTrainer(pop, score);
+			train.setSpeciation(new OriginalNEATSpeciation());
+			do{
+				train.iteration();
+				System.out.println("Epoch #"+train.getIteration()+" Score:"+train.getError()+", Species:"+pop.getSpecies().size());
+			}while(train.getIteration()<=iterations && train.getError()<scoreValue);
+			train.finishTraining();
+			Encog.getInstance().shutdown();
+			this.addNEATPopulation(key, (NEATPopulation)train.getPopulation());
+		}
+	}
+	public NEATNetwork getBestHyperNEATNetwork(String key,CalculateScore score){
+		NEATPopulation pop=this.getNEATPopulation(key);
+		if(pop.isHyperNEAT()){
+			final EvolutionaryAlgorithm train=NEATUtil.constructNEATTrainer(pop, score);
+			train.finishTraining();
+			return (NEATNetwork)((HyperNEATCODEC)train.getCODEC()).decode(train.getBestGenome());
+		}
+		return null;
 	}
 }

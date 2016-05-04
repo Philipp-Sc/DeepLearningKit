@@ -77,8 +77,8 @@ public class Application {
 		CalculateScore someScore= new BasicScore(neuralActor, false, false);
 		//MainController.getAdvancedNetworkController().createNEATPopulation("testpop", 1, 1, 1000);
 		//MainController.getAdvancedNetworkController().trainNEATPopulation("testpop", someScore, 0.0001);
-		NEATPopulation nn=(NEATPopulation) MainController.getAdvancedNetworkController().getBestMethod("testpop", someScore);
-		System.out.println(nn.compute(null));
+		//NEATPopulation nn=(NEATPopulation) MainController.getAdvancedNetworkController().getBestMethod("testpop", someScore);
+		//System.out.println(nn.compute(null));
 	}
 	public static void main2(String[] args) throws IOException{
 		NeuralActor neuralActor=new LinearActor(true, 1) {
@@ -108,7 +108,7 @@ public class Application {
 			}
 		};
 		CalculateScore someScore= new BasicScore(neuralActor, false, false);
-		MainController.getAdvancedNetworkController().trainNewBasicNetwork("test",0,1 ,someScore, 20, 2, 100, 500);
+		MainController.getSimpleNetworkController().trainNewBasicNetwork("test",0,1 ,someScore, 20, 2, 100, 500);
 	}
 	public static void main(String[] args) throws IOException, InvalidMidiDataException{
 		int stackSize=4;
@@ -143,10 +143,8 @@ public class Application {
 					
 					if(each.getNeuronValues()[0]>0.4){
 						reward++;
-						reward++;
-						reward++;
 					}
-					if(each.getNeuronValues()[0]<0.7){
+					if(each.getNeuronValues()[0]<0.5){
 						reward++;
 					}
 				}
@@ -174,14 +172,18 @@ public class Application {
 			}
 		};
 		CalculateScore someScore= new BasicScore(neuralActor, false, false);
-		MainController.getAdvancedNetworkController().createNEATPopulation("neatpop", 1, 1, 1000);
-		MainController.getAdvancedNetworkController().trainNEATPopulation("neatpop", someScore, 999,100);
-		NEATNetwork nnn=MainController.getAdvancedNetworkController().getBestNEATNetwork("neatpop", someScore);
+		//MainController.getAdvancedNetworkController().createNEATPopulation("neatpop", 1, 1, 1000);
+		MainController.getAdvancedNetworkController().createHyperNEATPopulation("t", 1000, 1,1);
+		MainController.getAdvancedNetworkController().trainHyperNEATPopulation("t", someScore, 999, 100);
+		//MainController.getAdvancedNetworkController().trainNEATPopulation("neatpop", someScore, 999,100);
+		//NEATNetwork nnn=MainController.getAdvancedNetworkController().getBestNEATNetwork("neatpop", someScore);
+		NEATNetwork nnn=MainController.getAdvancedNetworkController().getBestHyperNEATNetwork("t", someScore);
 		NormalizedField n=new NormalizedField(NormalizationAction.Normalize, "index", 4, 0, 0.9, -0.9);
 		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(0)})));
 		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(1)})));
 		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(2)})));
 		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(3)})));
+		
 		//MainController.getAdvancedNetworkController().trainNewBasicNetwork("test",1,1 ,someScore, 20, 4, 300, 7000);
 		ans.finishedEvaluation();
 		/*List<NeuralAction> list=new ArrayList<>();

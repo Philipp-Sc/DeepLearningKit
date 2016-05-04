@@ -1,16 +1,34 @@
 package ps.deeplearningkit.core.neuralnetwork;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.BitSet;
+
+import org.encog.ml.CalculateScore;
+
+import ps.deeplearningkit.core.neurallearning.Ai;
+import ps.deeplearningkit.core.neuralnetwork.utils.Assistant;
 
 public class SimpleNetworkController extends AdvancedNetworkController{
 
+	/**
+	 * This controller provides convenience methods.
+	 * @param path
+	 */
 	public SimpleNetworkController(String path) {
 		super(path);
 	}
+	/**
+	 * ART1 Networks
+	 */
 	
+	/**
+	 * Create ART1 Network with the right configuration for double[] input.
+	 * @param key
+	 * @param doubleCount length of the double array.
+	 * @param precision {10,100,1000,..} number of digits to consider.
+	 * @param outputNeurons
+	 * @throws IOException
+	 */
 	public void createART1(String key,int doubleCount,int precision,int outputNeurons) throws IOException{
 		this.createART1(key, doubleCount*(((Double) Math.ceil(Math.log(1*precision)/Math.log(2))).intValue()), outputNeurons);
 	}
@@ -27,7 +45,7 @@ public class SimpleNetworkController extends AdvancedNetworkController{
 		int maxBinaryDigits=((Double) Math.ceil(Math.log(1*precision)/Math.log(2))).intValue();
 		ArrayList<boolean[]> list=new ArrayList<>();
 		for(double each:input){
-			list.add(toBinaryNumber(((Double)(each*precision)).intValue(),maxBinaryDigits));
+			list.add(Assistant.toBinaryNumber(((Double)(each*precision)).intValue(),maxBinaryDigits));
 		}
 		if(list.size()==0){
 			return -1;
@@ -42,20 +60,25 @@ public class SimpleNetworkController extends AdvancedNetworkController{
 		}
 		return clusterART1(key, bits);
 	}
-	private boolean[] toBinaryNumber(int number,int digits){
-		String binary=Integer.toBinaryString(number);
-		boolean[] binaryNumber=new boolean[Math.max(digits,binary.length())];
-		for(int i=0;i<binaryNumber.length;i++){
-			if(i<binary.length()){
-				if(binary.charAt(i)=='0'){
-					binaryNumber[i]=false;
-				}else{
-					binaryNumber[i]=true;
-				}
-			}else{
-				binaryNumber[i]=false;
-			}
-		}
-		return binaryNumber;
+	/**
+	 * BasicNeuralNetworks
+	 */
+	/**
+	 * Trains the network with a reward function. 
+	 * No training set is needed. 
+	 * The network will learn on its own.
+	 * This variation uses NeuralSimulatedAnnealing.
+	 * @param key
+	 * @param someScore
+	 * @param startTemp
+	 * @param stopTemp
+	 * @param cycles
+	 * @param iterations
+	 * @throws IOException
+	 */
+	public void trainNewBasicNetwork(String key,int inputCount,int outputCount,CalculateScore someScore,int startTemp,int stopTemp,int cycles,int iterations) throws IOException{
+		Ai train=new Ai(null, inputCount, outputCount, someScore, startTemp, stopTemp, cycles);
+		train.train(iterations);
+		this.addBasicNetwork(key, train.getBasicNetwork());
 	}
 }
