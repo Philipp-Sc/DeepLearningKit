@@ -4,13 +4,13 @@ import ps.deeplearningkit.core.neuralnetwork.AdvancedNetworkController;
 import ps.deeplearningkit.core.neuralnetwork.SimpleNetworkController;
 
 /**
- * This controller controls everything needed for OmenOracle.
+ * This controller controls everything needed for the DeepLearningKit.
  * @author Philipp Schlütermann
  *
  */
 public class MainController {
 
-	private static String pathToSaveNeuralNetworks="/home/user-p/Documents/Project/";
+	private static String pathToSaveNeuralNetworks="/home/philipp/Documents/";
 	private static SimpleNetworkController networkController;
 	
 	public static void setPath(String path){

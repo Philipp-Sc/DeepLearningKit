@@ -78,7 +78,6 @@ public class AdvancedNetworkController extends NetworkController{
 	 * Basic Networks
 	 * @throws IOException 
 	 */
-	// TODO: TEST/CREATE BASICNETWORKS
 	/**
 	 * Creates a basic neural network.
 	 * @param key
@@ -143,7 +142,6 @@ public class AdvancedNetworkController extends NetworkController{
 	}
 	/**
 	 * ART1 Networks
-	 * 
 	 */
 	/**
 	 * Create an ART1 network and saves it.
@@ -177,8 +175,11 @@ public class AdvancedNetworkController extends NetworkController{
 		}
 	}
 	/**
+	 * NEATNetworks
+	 */
+	/**
 	 * Creates a NEATPopulation which can be used to create a best NEATNetwork.
-	 * @param key
+	 * @param key for the NEATPopulation
 	 * @param inputCount
 	 * @param outputCount
 	 * @param populationSize
@@ -192,11 +193,12 @@ public class AdvancedNetworkController extends NetworkController{
 	}
 	/**
 	 * Train an existing NEATPopulation.
-	 * @param key
+	 * @param key for a NEATPopulation.
 	 * @param score
 	 * @param scoreValue
+	 * @throws IOException 
 	 */
-	public void trainNEATPopulation(String key,CalculateScore score,double scoreValue,int iterations){
+	public void trainNEATPopulation(String key,CalculateScore score,double scoreValue,int iterations) throws IOException{
 		NEATPopulation pop=this.getNEATPopulation(key);
 		final EvolutionaryAlgorithm train=NEATUtil.constructNEATTrainer(pop, score);
 		do{
@@ -205,10 +207,11 @@ public class AdvancedNetworkController extends NetworkController{
 		}while(train.getIteration()<=iterations && train.getError()<scoreValue);
 		train.finishTraining();
 		Encog.getInstance().shutdown();
+		this.addNEATPopulation(key, (NEATPopulation)train.getPopulation());
 	}
 	/**
-	 * NEATNetworks are always retrieved from their populations. TODO: does not work
-	 * @return
+	 * NEATNetworks are always retrieved from their populations.
+	 * @return NEATNetwork
 	 */
 	public NEATNetwork getBestNEATNetwork(String key,CalculateScore score){
 		NEATPopulation pop=this.getNEATPopulation(key);
@@ -216,24 +219,4 @@ public class AdvancedNetworkController extends NetworkController{
 		train.finishTraining();
 		return (NEATNetwork)train.getCODEC().decode(train.getBestGenome());
 	}
-	/**
-	 * Trains an existing NEATPopulation.
-	 * @param key
-	 * @param someScore
-	 * @param error
-	 * @throws IOException
-	 */
-	public void trainNEATPopulationOLD(String key,CalculateScore someScore,double error) throws IOException{
-		TrainEA train=NEATUtil.constructNEATTrainer(someScore,0,1,1000);
-		EncogUtility.trainToError(train, error);
-		this.addNEATPopulation(key, (NEATPopulation)train.getPopulation());
-	}
-	/**
-	 * retrieves the best MLMethod out of the given population. OLD
-	 */
-	public MLMethod getBestMethod(String key,CalculateScore someScore){
-		TrainEA train=NEATUtil.constructNEATTrainer(this.getNEATPopulation(key), someScore);
-		return train.getMethod();
-	}
-
 }

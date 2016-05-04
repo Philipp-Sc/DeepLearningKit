@@ -131,7 +131,7 @@ public class Application {
 				 * Initialize State
 				 */
 				int reward=0;
-				double val=0.00001;
+				double val=0.000054321;
 				int i=1;
 				for(NeuralAction each:list){
 					if(each==null){
@@ -141,7 +141,12 @@ public class Application {
 						return -1;
 					}
 					
-					if(each.getNeuronValues()[0]<val){
+					if(each.getNeuronValues()[0]>0.4){
+						reward++;
+						reward++;
+						reward++;
+					}
+					if(each.getNeuronValues()[0]<0.7){
 						reward++;
 					}
 				}
@@ -179,10 +184,10 @@ public class Application {
 		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(3)})));
 		//MainController.getAdvancedNetworkController().trainNewBasicNetwork("test",1,1 ,someScore, 20, 4, 300, 7000);
 		ans.finishedEvaluation();
-		List<NeuralAction> list=new ArrayList<>();
+		/*List<NeuralAction> list=new ArrayList<>();
 		for(int i=1;i<stackSize;i++){
 			list.add(new MusicAction(MainController.getAdvancedNetworkController().testBasicNetwork("test", new BasicMLData(new double[]{1/i})).getData()));
-		}
+		}*/
 		//MusicEndPoint mp=new MusicEndPoint(list);
 		//System.out.println(mp.getString());
 	}
