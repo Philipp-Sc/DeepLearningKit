@@ -19,6 +19,7 @@ public class RealVectorBehavior implements Behavior{
 	}
 	@Override
 	public double distanceFrom(Behavior b) {
+		//return  vector.getL1Distance(b.getVector())/maxDistance;
 		return vector.getDistance(b.getVector())/maxDistance;
 	}
 	@Override

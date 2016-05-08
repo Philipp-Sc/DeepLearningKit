@@ -7,10 +7,11 @@ import org.encog.neural.networks.BasicNetwork;
 import org.encog.util.arrayutil.NormalizationAction;
 import org.encog.util.arrayutil.NormalizedField;
 
-import ps.deeplearningkit.core.example.music.Notes;
 import ps.deeplearningkit.core.simulator.NeuralAction;
 import ps.deeplearningkit.core.simulator.NeuralStack;
 import ps.deeplearningkit.core.simulator.StackSimulator;
+
+import java.util.List;
 
 public abstract class LinearActor extends NeuralActor{
 
@@ -23,7 +24,7 @@ public abstract class LinearActor extends NeuralActor{
 	}
 	private void initSimulator(){
 		this.sim=new StackSimulator<NeuralAction>(maxSize) {
-			private NormalizedField index=new NormalizedField(NormalizationAction.Normalize, "index", maxSize, 0, 0.9, -0.9);
+			private NormalizedField index=new NormalizedField(NormalizationAction.Normalize, "index", maxSize, 0, 1, -1);
 			public double getReward(){
 				return LinearActor.this.getReward(this.getStack().copy());
 			}
@@ -31,10 +32,10 @@ public abstract class LinearActor extends NeuralActor{
 				return LinearActor.this.toActionObject(choice);
 			}
 			public double[] getInput(int size){
-				double[] input= LinearActor.this.getInput(size);
-				double[] result=new double[input.length+1];
+				double[] input= LinearActor.this.getInput(this.getStack().getList());
+				double[] result=new double[size];
 				result[0]=index.normalize(this.getStack().getSize());
-				for(int i=0;i<input.length;i++){
+				for(int i=0;i<size-1;i++){
 					result[i+1]=input[i];
 				}
 				return result;
@@ -60,9 +61,12 @@ public abstract class LinearActor extends NeuralActor{
 		}
 		return sim.getReward();
 	}
+	public List<NeuralAction> getNeuralActions(){
+		return sim.getStack().getList();
+	}
 	/**
 	 * Game logic, here you use the history to evaluate the result.
-	 * @param memory/history
+	 * @param stack
 	 * @return double reward used to archive a score
 	 */
 	protected abstract double getReward(NeuralStack<NeuralAction> stack);
@@ -74,9 +78,9 @@ public abstract class LinearActor extends NeuralActor{
 	protected abstract NeuralAction toActionObject(double[] choice);
 	/**
 	 * Only double values from -1 to 1 allowed!
-	 * @param size of the double array.
+	 * @param list
 	 * @return give the neural network some feedback.
 	 */
-	protected abstract double[] getInput(int size);
+	protected abstract double[] getInput(List<NeuralAction> list);
 	
 }

@@ -27,7 +27,7 @@ public class ClassifiedBehavior extends RealVectorBehavior{
 	}
 	/**
 	 * characterizes the values with neural networks.
-	 * @param MLClassification implementing MLMethods.
+	 * @param networks implementing MLMethods.
 	 * @return an array of classifications for the behavior.
 	 * @throws IOException
 	 */
@@ -43,9 +43,15 @@ public class ClassifiedBehavior extends RealVectorBehavior{
 		}
 		return classifications;
 	}
+	public int getART1Classification(MLClassification classification,int precision){
+		return Assistant.clusterART1((ART1) classification,getVector().getDataRef(),precision);
+	}
+	public int getSOMClassification(MLClassification classification){
+		return classification.classify(new BasicMLData(getVector().getDataRef()));
+	}
 	/**
 	 * The distanceFrom is extended to include the characterization
-	 * @param another characterized behavior.
+	 * @param classifiedBehavior characterized behavior.
 	 * @return distance
 	 * @throws IOException
 	 */

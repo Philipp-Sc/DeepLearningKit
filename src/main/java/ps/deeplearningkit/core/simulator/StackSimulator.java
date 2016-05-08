@@ -30,7 +30,7 @@ public abstract class StackSimulator<T> implements Simulator{
 	public boolean isFinished() {
 		return stack.isFull();
 	}
-	protected NeuralStack<T> getStack(){
+	public NeuralStack<T> getStack(){
 		return stack;
 	}
 	

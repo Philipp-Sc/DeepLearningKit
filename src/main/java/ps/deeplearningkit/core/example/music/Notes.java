@@ -11,7 +11,7 @@ import javax.sound.midi.InvalidMidiDataException;
 
 import org.encog.util.arrayutil.NormalizationAction;
 import org.encog.util.arrayutil.NormalizedField;
-import org.jfugue.midi.MidiFileManager;
+//import org.jfugue.midi.MidiFileManager;
 
 public class Notes {
 
@@ -86,8 +86,8 @@ public class Notes {
 		return list;
 	}
 	private static String getMusicPiece(String midi) throws IOException, InvalidMidiDataException{
-		String musicString = MidiFileManager.loadPatternFromMidi(new File(midi)).toString();
-		return musicString;
+		//String musicString = MidiFileManager.loadPatternFromMidi(new File(midi)).toString();
+		return "";
 	}
 	private static void initMusicStrings(List<String> completePiece){
 		Set<String> atomSet=new HashSet<>();

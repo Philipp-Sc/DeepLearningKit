@@ -44,9 +44,8 @@ public class Assistant {
 	 * @param the network
 	 * @param input (its length must be less than the inputNeuronCount)
 	 * @return class
-	 * @throws IOException 
 	 */
-	public static int clusterART1(ART1 network,boolean[] input) throws IOException{
+	public static int clusterART1(ART1 network,boolean[] input){
 		ART1 logic=network;
 		int outputCount=logic.getOutputCount();
 		BiPolarNeuralData in=new BiPolarNeuralData(input);
@@ -67,7 +66,7 @@ public class Assistant {
 	 * 
 	 * @throws IOException 
 	 */
-	public static int clusterART1(ART1 network,double[] input,int precision) throws IOException{
+	public static int clusterART1(ART1 network,double[] input,int precision){
 		int maxBinaryDigits=((Double) Math.ceil(Math.log(1*precision)/Math.log(2))).intValue();
 		ArrayList<boolean[]> list=new ArrayList<>();
 		for(double each:input){

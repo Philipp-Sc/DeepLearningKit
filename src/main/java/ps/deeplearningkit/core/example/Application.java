@@ -1,12 +1,13 @@
 package ps.deeplearningkit.core.example;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.SysexMessage;
 
 import org.encog.ml.CalculateScore;
+import org.encog.ml.MLClassification;
 import org.encog.ml.MLMethod;
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
@@ -21,201 +22,223 @@ import org.encog.util.simple.EncogUtility;
 import ps.deeplearningkit.core.MainController;
 import ps.deeplearningkit.core.example.music.MusicAction;
 import ps.deeplearningkit.core.example.music.MusicEndPoint;
+import ps.deeplearningkit.core.example.pixelbreed.PixelAction;
+import ps.deeplearningkit.core.example.pixelbreed.PixelEndPoint;
+import ps.deeplearningkit.core.example.pixelbreed.PixelSimulator;
+import ps.deeplearningkit.core.example.pixelbreed.PixelState;
 import ps.deeplearningkit.core.neurallearning.BasicScore;
 import ps.deeplearningkit.core.neurallearning.LinearActor;
 import ps.deeplearningkit.core.neurallearning.NeuralActor;
 import ps.deeplearningkit.core.search.abstractnoveltysearch.AbstractNoveltySearch;
 import ps.deeplearningkit.core.search.abstractnoveltysearch.ClassifiedBehavior;
+import ps.deeplearningkit.core.search.disparitysearch.DisparitySearch;
 import ps.deeplearningkit.core.search.noveltysearch.Behavior;
 import ps.deeplearningkit.core.search.noveltysearch.NoveltySearch;
 import ps.deeplearningkit.core.search.noveltysearch.RealVectorBehavior;
+import ps.deeplearningkit.core.search.uct.Simulator;
+import ps.deeplearningkit.core.search.uct.State;
+import ps.deeplearningkit.core.search.uct.UCT;
 import ps.deeplearningkit.core.simulator.BasicNeuralAction;
 import ps.deeplearningkit.core.simulator.NeuralAction;
 import ps.deeplearningkit.core.simulator.NeuralStack;
+import sun.applet.Main;
 
 public class Application {
 
-	public static void main1(String[] args) throws IOException{
-		NeuralActor neuralActor=new LinearActor(false, 1) {
-			
+	/**
+	 * Here the final state is used for evaluation of novelty.
+	 * @param args
+	 * @throws Exception
+     */
+	public static void main1(String[] args) throws Exception {
+		int stackSize = 25;
+		NoveltySearch ans = new NoveltySearch();
+		NeuralActor neuralActor = new LinearActor(true, stackSize) {
+
 			@Override
-			protected double[] getInput(int size) {
-				return new double[]{};
+			protected double[] getInput(List<NeuralAction> list) {
+				PixelEndPoint branch = new PixelEndPoint(list);
+				return branch.getBehavior().getVector().getDataRef();
 			}
-			
+
 			@Override
 			protected double getReward(NeuralStack<NeuralAction> stack) {
 				/*
 				 * stack.getStack().getNeuronValues()
 				 */
-				List<NeuralAction> list=stack.getList();
-				if(list==null){
-					return -1;
-				}
-				if(list.size()==0){
-					return -1;
-				}
-				if(list.get(0)==null){
-					return -1;
-				}
-				if(list.get(0).getNeuronValues().length<=0){
-					return -1;
-				}
-				if(list.get(0).getNeuronValues()[0]==0.42){
-					return 1;
-				}else if(list.get(0).getNeuronValues()[0]<0.0){
-					return -1;
-				}else{
-					return -1*Math.abs(list.get(0).getNeuronValues()[0]-0.42);
-				}
-			}
-			@Override
-			protected NeuralAction toActionObject(double[] choice) {
-				return new Action(choice);
-			}
-		};
-		CalculateScore someScore= new BasicScore(neuralActor, false, false);
-		//MainController.getAdvancedNetworkController().createNEATPopulation("testpop", 1, 1, 1000);
-		//MainController.getAdvancedNetworkController().trainNEATPopulation("testpop", someScore, 0.0001);
-		//NEATPopulation nn=(NEATPopulation) MainController.getAdvancedNetworkController().getBestMethod("testpop", someScore);
-		//System.out.println(nn.compute(null));
-	}
-	public static void main2(String[] args) throws IOException{
-		NeuralActor neuralActor=new LinearActor(true, 1) {
-			
-			@Override
-			protected double[] getInput(int size) {
-				return new double[]{};
-			}
-			
-			@Override
-			protected double getReward(NeuralStack<NeuralAction> stack) {
-				/*
-				 * stack.getStack().getNeuronValues()
-				 */
-				List<NeuralAction> list=stack.getList();
-				if(list.get(0).getNeuronValues()[0]==0.42){
-					return 1;
-				}else if(list.get(0).getNeuronValues()[0]<0.0){
-					return -1;
-				}else{
-					return -1*Math.abs(list.get(0).getNeuronValues()[0]-0.42);
-				}
-			}
-			@Override
-			protected NeuralAction toActionObject(double[] choice) {
-				return new Action(choice);
-			}
-		};
-		CalculateScore someScore= new BasicScore(neuralActor, false, false);
-		MainController.getSimpleNetworkController().trainNewBasicNetwork("test",0,1 ,someScore, 20, 2, 100, 500);
-	}
-	public static void main(String[] args) throws IOException, InvalidMidiDataException{
-		int stackSize=4;
-		//AbstractNoveltySearch ans=new AbstractNoveltySearch("som", 10, "art1", 10000, stackSize, 30);
-		NoveltySearch ans=new NoveltySearch();
-		NeuralActor neuralActor=new LinearActor(true, stackSize) {
-			
-			@Override
-			protected double[] getInput(int size) {
-				return new double[]{};
-			}
-			
-			@Override
-			protected double getReward(NeuralStack<NeuralAction> stack) {
-				/*
-				 * stack.getStack().getNeuronValues()
-				 */
-				List<NeuralAction> list=stack.getList();
+				List<NeuralAction> list = stack.getList();
 				/*
 				 * Initialize State
 				 */
-				int reward=0;
-				double val=0.000054321;
-				int i=1;
-				for(NeuralAction each:list){
-					if(each==null){
-						return -1;
-					}
-					if(each.getNeuronValues()==null){
-						return -1;
-					}
-					
-					if(each.getNeuronValues()[0]>0.4){
-						reward++;
-					}
-					if(each.getNeuronValues()[0]<0.5){
-						reward++;
-					}
-				}
-				//System.out.println(reward+""+list.size());
-				return reward;
+				PixelEndPoint branch = new PixelEndPoint(list);
 				/*
-				double novelty;
-				try{
-				MusicEndPoint perf=new MusicEndPoint(list);
-				Behavior current= perf.getBehavior();
-				ans.addToCurrentPopulation(new RealVectorBehavior(current.getVector().getDataRef()));
-				novelty=ans.testNovelty(new RealVectorBehavior(current.getVector().getDataRef()));
-				System.out.println(novelty);
-					//ans.finishedEvaluation();
-				}catch(Exception e){
+				System.out.println(branch.showState());
+				try {
+					wait(1000);
+				} catch (InterruptedException e) {
 					e.printStackTrace();
-					throw new RuntimeException();
-				}
+				}*/
+				Behavior behavior = branch.getBehavior();
+				double novelty;
+				ans.addToCurrentPopulation(behavior);
+				novelty = ans.testNovelty(behavior);
+				//System.out.println(novelty);
+				//ans.finishedEvaluation();
 				return novelty;
-				*/
+
 			}
+
 			@Override
 			protected NeuralAction toActionObject(double[] choice) {
 				return new BasicNeuralAction(choice);
 			}
 		};
-		CalculateScore someScore= new BasicScore(neuralActor, false, false);
-		//MainController.getAdvancedNetworkController().createNEATPopulation("neatpop", 1, 1, 1000);
-		MainController.getAdvancedNetworkController().createHyperNEATPopulation("t", 1000, 1,1);
-		MainController.getAdvancedNetworkController().trainHyperNEATPopulation("t", someScore, 999, 100);
-		//MainController.getAdvancedNetworkController().trainNEATPopulation("neatpop", someScore, 999,100);
-		//NEATNetwork nnn=MainController.getAdvancedNetworkController().getBestNEATNetwork("neatpop", someScore);
-		NEATNetwork nnn=MainController.getAdvancedNetworkController().getBestHyperNEATNetwork("t", someScore);
-		NormalizedField n=new NormalizedField(NormalizationAction.Normalize, "index", 4, 0, 0.9, -0.9);
-		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(0)})));
-		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(1)})));
-		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(2)})));
-		System.out.println(nnn.compute(new BasicMLData(new double[]{n.normalize(3)})));
-		
-		//MainController.getAdvancedNetworkController().trainNewBasicNetwork("test",1,1 ,someScore, 20, 4, 300, 7000);
-		ans.finishedEvaluation();
-		/*List<NeuralAction> list=new ArrayList<>();
-		for(int i=1;i<stackSize;i++){
-			list.add(new MusicAction(MainController.getAdvancedNetworkController().testBasicNetwork("test", new BasicMLData(new double[]{1/i})).getData()));
-		}*/
-		//MusicEndPoint mp=new MusicEndPoint(list);
-		//System.out.println(mp.getString());
-	}
-	public static void main4(String[] args)throws IOException{
-		double[] input1=new double[]{0.1,0.2,0.3};
-		double[] input2=new double[]{0.1,0.7,0.3};
-		double[] input3=new double[]{0.1,0.5,0.5};
-		double[] input4=new double[]{0.7,0.2,0.3};
-		double[] input5=new double[]{0.9,0.2,0.1};
-		
-		MainController.getSimpleNetworkController().createART1("f", 12, 10000);
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input1, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input2, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input3, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input1, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input2, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input3, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input4, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input5, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input4, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input5, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input1, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input2, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input3, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input4, 10));
-		System.out.println(MainController.getSimpleNetworkController().clusterART1("f", input5, 10));
+		CalculateScore someScore = new BasicScore(neuralActor, false, false);
+		MainController.getAdvancedNetworkController().createNEATPopulation("neatpop", 26, 4, 1500);
+		MainController.getAdvancedNetworkController().trainNEATPopulation("neatpop", someScore, 999, 1);
+		NEATNetwork nnn = MainController.getAdvancedNetworkController().getBestNEATNetwork("neatpop", someScore);
+
+		//ans.finishedEvaluation();
+		neuralActor.setTrack(true);
+		neuralActor.setMLMethod(nnn);
+		neuralActor.scoreActor();
+		System.out.println(new PixelEndPoint(neuralActor.getNeuralActions()).showState());
 	}
 
+	/**
+	 * Here we aim to use every state on the way to the final state.
+	 * In this attempt we use only the difference between states,
+	 * in future attempts it might be better to use the difference between comparable actions.
+	 * @param args
+	 * @throws Exception
+     */
+	public static void main(String[] args) throws Exception {
+		Random random=new Random();
+		int stackSize = 25;
+		int precision=10;
+		MainController.getSimpleNetworkController().createART1("art1",100,precision,2000);
+		MLClassification art1= MainController.getAdvancedNetworkController().getART1Network("art1");
+		DisparitySearch ds=new DisparitySearch(art1);
+		ds.setPrecision(precision);
+		NeuralActor neuralActor = new LinearActor(false, stackSize) {
+
+			@Override
+			protected double[] getInput(List<NeuralAction> list) {
+				PixelEndPoint branch = new PixelEndPoint(list);
+				return branch.getBehavior().getVector().getDataRef();
+			}
+
+			@Override
+			protected double getReward(NeuralStack<NeuralAction> stack) {
+				/*
+				 * stack.getStack().getNeuronValues()
+				 */
+				List<NeuralAction> list = stack.getList();
+				/*
+				 * Initialize States
+				 */
+				List<PixelEndPoint> endPoints=new ArrayList<>();
+				//for(int i=0;i<list.size();i++){
+				//	endPoints.add(new PixelEndPoint(list.subList(0,i)));
+				//}
+				endPoints.add(new PixelEndPoint(list));
+				double d=ds.testDisparity(endPoints.get(0).getBehavior());
+			//	System.out.println("disparity: "+d);
+				//ns.finishedEvaluation();
+				//System.out.println("value: "+value);
+				// return metric like sums/count
+				//Behavior behavior = branch.getBehavior();
+				//double novelty;
+				//ans.addToCurrentPopulation(behavior);
+				//novelty = ans.testNovelty(behavior);
+				//System.out.println(novelty);
+				//ans.finishedEvaluation();
+				return d;
+
+			}
+
+			@Override
+			protected NeuralAction toActionObject(double[] choice) {
+				return new BasicNeuralAction(choice);
+			}
+		};
+		CalculateScore someScore = new BasicScore(neuralActor, false, false);
+		MainController.getAdvancedNetworkController().createNEATPopulation("neatpop", 25+1, 3, 1000);
+		MainController.getAdvancedNetworkController().trainNEATPopulation("neatpop", someScore, 100000, 200);
+		NEATNetwork nnn = MainController.getAdvancedNetworkController().getBestNEATNetwork("neatpop", someScore);
+
+		//ans.finishedEvaluation();
+		neuralActor.setTrack(true);
+		neuralActor.setMLMethod(nnn);
+		neuralActor.scoreActor();
+		System.out.println(new PixelEndPoint(neuralActor.getNeuralActions()).showState());
+	}
+	public static void mainOld(String[] args) throws Exception {
+		Random random=new Random();
+		int stackSize = 1;
+		NoveltySearch ns = new NoveltySearch();
+		NeuralActor neuralActor = new LinearActor(false, stackSize) {
+
+			@Override
+			protected double[] getInput(List<NeuralAction> list) {
+				PixelEndPoint branch = new PixelEndPoint(list);
+				return branch.getBehavior().getVector().getDataRef();
+			}
+
+			@Override
+			protected double getReward(NeuralStack<NeuralAction> stack) {
+				/*
+				 * stack.getStack().getNeuronValues()
+				 */
+				List<NeuralAction> list = stack.getList();
+				/*
+				 * Initialize States
+				 */
+				List<PixelEndPoint> endPoints=new ArrayList<>();
+				//for(int i=0;i<list.size();i++){
+				//	endPoints.add(new PixelEndPoint(list.subList(0,i)));
+				//}
+				endPoints.add(new PixelEndPoint(list));
+				double value=0;
+				for(PixelEndPoint endPoint:endPoints){
+					// Calculate sum of future novelty for each node.
+					// "real" world
+					Simulator simReal = new PixelSimulator(endPoint.getState(),ns);
+					// simulator for planning
+					Simulator simPlan = new PixelSimulator(endPoint.getState(),ns);
+					int trajectories = 1;
+					int depth = 1;
+					UCT planner = new UCT(simPlan, trajectories, depth,
+							simPlan.getDiscountFactor(), random);
+					value+=planner.getQ(planner.planAndAct(simReal.getState()));
+				}
+				//ns.finishedEvaluation();
+				//System.out.println("value: "+value);
+				// return metric like sums/count
+				//Behavior behavior = branch.getBehavior();
+				//double novelty;
+				//ans.addToCurrentPopulation(behavior);
+				//novelty = ans.testNovelty(behavior);
+				//System.out.println(novelty);
+				//ans.finishedEvaluation();
+				return value;
+
+			}
+
+			@Override
+			protected NeuralAction toActionObject(double[] choice) {
+				return new BasicNeuralAction(choice);
+			}
+		};
+		CalculateScore someScore = new BasicScore(neuralActor, false, false);
+		MainController.getAdvancedNetworkController().createNEATPopulation("neatpop", 26, 3, 200);
+		MainController.getAdvancedNetworkController().trainNEATPopulation("neatpop", someScore, 999, 500);
+		NEATNetwork nnn = MainController.getAdvancedNetworkController().getBestNEATNetwork("neatpop", someScore);
+
+		//ans.finishedEvaluation();
+		neuralActor.setTrack(true);
+		neuralActor.setMLMethod(nnn);
+		neuralActor.scoreActor();
+		System.out.println(new PixelEndPoint(neuralActor.getNeuralActions()).showState());
+	}
 }

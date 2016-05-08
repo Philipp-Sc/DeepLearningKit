@@ -20,6 +20,9 @@ import org.encog.neural.neat.NEATUtil;
 import org.encog.neural.neat.training.species.OriginalNEATSpeciation;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
+import org.encog.neural.pnn.BasicPNN;
+import org.encog.neural.pnn.PNNKernelType;
+import org.encog.neural.pnn.PNNOutputMode;
 import org.encog.neural.som.SOM;
 import org.encog.neural.som.training.basic.BasicTrainSOM;
 import org.encog.neural.som.training.basic.neighborhood.NeighborhoodRBF;
@@ -115,6 +118,13 @@ public class AdvancedNetworkController extends NetworkController{
 	public MLData testBasicNetwork(String key,MLData test){
 		return this.getBasicNetwork(key).compute(test);
 	}
+
+	/**
+	 * BasicPNN
+	 */
+	public void createBasicPNN(String key,int inputNeurons,int outputNeurons){
+		BasicPNN pnn= new BasicPNN(PNNKernelType.Gaussian, PNNOutputMode.Regression,inputNeurons,outputNeurons);
+	}
 	/**
 	 * ART1 Networks
 	 */
@@ -158,7 +168,7 @@ public class AdvancedNetworkController extends NetworkController{
 	 * @param inputCount
 	 * @param outputCount
 	 * @param populationSize
-	 * @param error
+	 * @param //error
 	 * @throws IOException
 	 */
 	public void createNEATPopulation(String key,int inputCount,int outputCount,int populationSize) throws IOException{
