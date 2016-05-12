@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 import org.encog.ml.CalculateScore;
 
-import ps.deeplearningkit.core.neurallearning.Ai;
+import org.encog.neural.networks.BasicNetwork;
+import org.encog.neural.networks.training.anneal.NeuralSimulatedAnnealing;
 import ps.deeplearningkit.core.neuralnetwork.utils.Assistant;
 
 public class SimpleNetworkController extends AdvancedNetworkController{
@@ -77,8 +78,13 @@ public class SimpleNetworkController extends AdvancedNetworkController{
 	 * @throws IOException
 	 */
 	public void trainNewBasicNetwork(String key,int inputCount,int outputCount,CalculateScore someScore,int startTemp,int stopTemp,int cycles,int iterations) throws IOException{
-		Ai train=new Ai(null, inputCount, outputCount, someScore, startTemp, stopTemp, cycles);
-		train.train(iterations);
-		this.addBasicNetwork(key, train.getBasicNetwork());
+		this.createBasicNetwork(key,inputCount,outputCount);
+		BasicNetwork bn=this.getBasicNetwork(key);
+		NeuralSimulatedAnnealing train=	new NeuralSimulatedAnnealing(bn, someScore, startTemp,stopTemp ,cycles);
+		for(int i=0;i<iterations;i++){
+			train.iteration();
+		}
+		train.finishTraining();
+		this.saveBasicNetworks();
 	}
 }

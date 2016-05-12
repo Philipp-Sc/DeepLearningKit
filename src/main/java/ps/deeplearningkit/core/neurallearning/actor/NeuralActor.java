@@ -1,11 +1,11 @@
-package ps.deeplearningkit.core.neurallearning;
+package ps.deeplearningkit.core.neurallearning.actor;
 import org.encog.ml.MLMethod;
-import ps.deeplearningkit.core.simulator.NeuralAction;
+import ps.deeplearningkit.core.simulator.debug.NeuralAction;
 
 import java.util.List;
 
 
-public abstract class NeuralActor implements Scoring{
+public abstract class NeuralActor implements Scoring {
 	
 	protected MLMethod bn;
 	protected boolean track;
@@ -15,9 +15,9 @@ public abstract class NeuralActor implements Scoring{
 	public void setMLMethod(MLMethod bn){
 		this.bn=bn;
 	}
-	public abstract double scoreActor();
 	public void setTrack(boolean track){
 		this.track=track;
 	}
+	public abstract double scoreActor();
 	public abstract List<NeuralAction> getNeuralActions();
 }

@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.simulator;
+package ps.deeplearningkit.core.simulator.debug;
 
 import java.util.List;
 

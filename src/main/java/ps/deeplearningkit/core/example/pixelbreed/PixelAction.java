@@ -2,7 +2,7 @@ package ps.deeplearningkit.core.example.pixelbreed;
 
 import org.encog.util.arrayutil.NormalizationAction;
 import org.encog.util.arrayutil.NormalizedField;
-import ps.deeplearningkit.core.simulator.BasicNeuralAction;
+import ps.deeplearningkit.core.simulator.debug.BasicNeuralAction;
 
 /**
  * Created by philipp on 5/5/16.

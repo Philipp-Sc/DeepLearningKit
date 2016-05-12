@@ -20,14 +20,13 @@ import org.encog.neural.neat.NEATUtil;
 import org.encog.neural.neat.training.species.OriginalNEATSpeciation;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
+import org.encog.neural.networks.training.anneal.NeuralSimulatedAnnealing;
 import org.encog.neural.pnn.BasicPNN;
 import org.encog.neural.pnn.PNNKernelType;
 import org.encog.neural.pnn.PNNOutputMode;
 import org.encog.neural.som.SOM;
 import org.encog.neural.som.training.basic.BasicTrainSOM;
 import org.encog.neural.som.training.basic.neighborhood.NeighborhoodRBF;
-
-import ps.deeplearningkit.core.neurallearning.Ai;
 
 /**
  * This controller is able to test,train and create networks.
@@ -105,8 +104,11 @@ public class AdvancedNetworkController extends NetworkController{
 	 */
 	public void trainBasicNetwork(String key,CalculateScore someScore,int startTemp,int stopTemp,int cycles,int iterations) throws IOException{
 		BasicNetwork bn=this.getBasicNetwork(key);
-		Ai train=new Ai(bn, bn.getInputCount(), bn.getOutputCount(), someScore, startTemp, stopTemp, cycles);
-		train.train(iterations);
+		NeuralSimulatedAnnealing train=	new NeuralSimulatedAnnealing(bn, someScore, startTemp,stopTemp ,cycles);
+		for(int i=0;i<iterations;i++){
+			train.iteration();
+		}
+		train.finishTraining();
 		this.saveBasicNetworks();
 	}
 	/**
@@ -188,7 +190,7 @@ public class AdvancedNetworkController extends NetworkController{
 		final EvolutionaryAlgorithm train=NEATUtil.constructNEATTrainer(pop, score);
 		do{
 			train.iteration();
-			System.out.println("Epoch #"+train.getIteration()+" Score:"+train.getError()+", Species:"+pop.getSpecies().size());
+			System.out.println("Epoch #"+train.getIteration()+" score:"+train.getError()+", Species:"+pop.getSpecies().size());
 		}while(train.getIteration()<=iterations && train.getError()<scoreValue);
 		train.finishTraining();
 		Encog.getInstance().shutdown();
@@ -229,7 +231,7 @@ public class AdvancedNetworkController extends NetworkController{
 			train.setSpeciation(new OriginalNEATSpeciation());
 			do{
 				train.iteration();
-				System.out.println("Epoch #"+train.getIteration()+" Score:"+train.getError()+", Species:"+pop.getSpecies().size());
+				System.out.println("Epoch #"+train.getIteration()+" score:"+train.getError()+", Species:"+pop.getSpecies().size());
 			}while(train.getIteration()<=iterations && train.getError()<scoreValue);
 			train.finishTraining();
 			Encog.getInstance().shutdown();

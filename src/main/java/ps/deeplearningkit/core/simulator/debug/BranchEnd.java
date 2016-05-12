@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.simulator;
+package ps.deeplearningkit.core.simulator.debug;
 
 import ps.deeplearningkit.core.search.noveltysearch.Behavior;
 

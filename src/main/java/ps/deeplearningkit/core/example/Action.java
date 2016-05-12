@@ -1,6 +1,6 @@
 package ps.deeplearningkit.core.example;
 
-import ps.deeplearningkit.core.simulator.BasicNeuralAction;
+import ps.deeplearningkit.core.simulator.debug.BasicNeuralAction;
 
 /**
  * Example implementation of BasicNeuralAction

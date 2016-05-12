@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.neurallearning;
+package ps.deeplearningkit.core.neurallearning.debug;
 
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
@@ -7,13 +7,14 @@ import org.encog.neural.networks.BasicNetwork;
 import org.encog.util.arrayutil.NormalizationAction;
 import org.encog.util.arrayutil.NormalizedField;
 
-import ps.deeplearningkit.core.simulator.NeuralAction;
-import ps.deeplearningkit.core.simulator.NeuralStack;
-import ps.deeplearningkit.core.simulator.StackSimulator;
+import ps.deeplearningkit.core.neurallearning.actor.NeuralActor;
+import ps.deeplearningkit.core.simulator.debug.NeuralAction;
+import ps.deeplearningkit.core.simulator.debug.NeuralStack;
+import ps.deeplearningkit.core.simulator.debug.StackSimulator;
 
 import java.util.List;
 
-public abstract class LinearActor extends NeuralActor{
+public abstract class LinearActor extends NeuralActor {
 
 	private StackSimulator<NeuralAction> sim;
 	private int maxSize;
@@ -44,20 +45,20 @@ public abstract class LinearActor extends NeuralActor{
 	}
 	public synchronized double scoreActor(){
 		initSimulator();
-		while(!sim.isFinished()){
+		while(!sim.isAbsorbing()){
 			if(bn instanceof BasicNetwork){
 				MLData input= new BasicMLData(sim.getInput(((BasicNetwork) bn).getInputCount()));
 				MLData output=((BasicNetwork) this.bn).compute(input);
-				sim.improve(output.getData());
+				sim.applyAction(output.getData());
 			}else if(bn instanceof NEATNetwork){
 				//this.track=false;
 				MLData input= new BasicMLData(sim.getInput(((NEATNetwork) bn).getInputCount()));
 				MLData output=((NEATNetwork) this.bn).compute(input);
-				sim.improve(output.getData());
+				sim.applyAction(output.getData());
 			}
 		}
 		if(track){
-			sim.showState();
+			sim.printState();
 		}
 		return sim.getReward();
 	}

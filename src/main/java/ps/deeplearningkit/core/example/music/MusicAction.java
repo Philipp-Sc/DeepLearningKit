@@ -4,10 +4,7 @@ import java.io.IOException;
 
 import javax.sound.midi.InvalidMidiDataException;
 
-import org.encog.util.arrayutil.NormalizationAction;
-import org.encog.util.arrayutil.NormalizedField;
-
-import ps.deeplearningkit.core.simulator.BasicNeuralAction;
+import ps.deeplearningkit.core.simulator.debug.BasicNeuralAction;
 
 /**
  * Example implementation of BasicNeuralAction

@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.disparitysearch;
+package ps.deeplearningkit.core.search.uncommonsearch;
 
 import org.encog.ml.MLClassification;
 import org.encog.neural.art.ART1;
@@ -12,22 +12,22 @@ import java.util.HashMap;
 /**
  * Created by philipp on 5/8/16.
  *
- * The Agent is rewarded for finding the least common classes of behaviors.
+ * Searching for the least common classes of behaviors.
+ * Knowing how common/uncommon a behavior is might give you very valuable insights.
  */
-public class DisparitySearch {
+public class UncommonSearch {
 
-    private final int densityRadius=1;
     private int precision=10000;
     private MLClassification classification;
     private HashMap<Integer,Integer> classCount=new HashMap<>();
 
-    public DisparitySearch(MLClassification classification){
+    public UncommonSearch(MLClassification classification){
         this.classification=classification;
     }
     public void setPrecision(int precision){
         this.precision=precision;
     }
-    public double testDisparity(Behavior behavior){
+    public double testUncommonnes(Behavior behavior){
         ClassifiedBehavior classifiedBehavior=new ClassifiedBehavior(behavior.getVector().getDataRef());
         int c;
         if(classification instanceof ART1){
@@ -41,7 +41,7 @@ public class DisparitySearch {
     private double getDensityOf(int c){
         ArrayList<Integer> distribution=new ArrayList<>();
         double totalDensity=0;
-        for(int densityRadius=0;densityRadius<=this.densityRadius;densityRadius++) {
+        for(int densityRadius=0;densityRadius<=1;densityRadius++) {
             // calculates the density of c for the densityRadius.
             for (int i = Math.max(0,c - densityRadius); i <= c + densityRadius; i++) {
                if(classCount.containsKey(i)){
@@ -74,7 +74,7 @@ public class DisparitySearch {
     }
     private void showMaxClass(){
         if(Collections.max(classCount.keySet())>=classification.getOutputCount()){
-            System.out.println("............./>");
+            System.out.println("Error: ART1 no more free classes available..");
         }
     }
 }

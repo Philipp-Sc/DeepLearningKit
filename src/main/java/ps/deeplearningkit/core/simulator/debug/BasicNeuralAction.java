@@ -1,9 +1,10 @@
-package ps.deeplearningkit.core.simulator;
+package ps.deeplearningkit.core.simulator.debug;
+
 /**
  * For the communication between the neural network and the domain specific actions/behaviors.
  * @author Philipp Schlütermann
  */
-public class BasicNeuralAction implements NeuralAction{
+public class BasicNeuralAction implements NeuralAction {
 
 	private double[] choice;
 	public BasicNeuralAction(double[] choice){

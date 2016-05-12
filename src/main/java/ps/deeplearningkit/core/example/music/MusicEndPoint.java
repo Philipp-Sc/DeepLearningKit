@@ -4,8 +4,8 @@ import java.util.List;
 import javax.sound.midi.InvalidMidiDataException;
 
 import ps.deeplearningkit.core.search.noveltysearch.Behavior;
-import ps.deeplearningkit.core.simulator.EndPoint;
-import ps.deeplearningkit.core.simulator.NeuralAction;
+import ps.deeplearningkit.core.simulator.debug.EndPoint;
+import ps.deeplearningkit.core.simulator.debug.NeuralAction;
 
 public class MusicEndPoint extends EndPoint<MusicState>{
 	

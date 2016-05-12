@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.simulator;
+package ps.deeplearningkit.core.simulator.debug;
 
 /**
  * Basically a action taken by a neural network, might not be legal.

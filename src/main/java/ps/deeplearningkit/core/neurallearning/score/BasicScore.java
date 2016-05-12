@@ -1,7 +1,8 @@
-package ps.deeplearningkit.core.neurallearning;
+package ps.deeplearningkit.core.neurallearning.score;
 
 import org.encog.ml.CalculateScore;
 import org.encog.ml.MLMethod;
+import ps.deeplearningkit.core.neurallearning.actor.NeuralActor;
 
 public class BasicScore implements CalculateScore{
 	

@@ -1,15 +1,16 @@
-package ps.deeplearningkit.core.neurallearning;
+package ps.deeplearningkit.core.neurallearning.debug;
 
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.networks.BasicNetwork;
 
-import ps.deeplearningkit.core.simulator.NeuralAction;
-import ps.deeplearningkit.core.simulator.NeuralTape;
-import ps.deeplearningkit.core.simulator.TapeSimulator;
+import ps.deeplearningkit.core.neurallearning.actor.NeuralActor;
+import ps.deeplearningkit.core.simulator.debug.NeuralAction;
+import ps.deeplearningkit.core.simulator.debug.NeuralTape;
+import ps.deeplearningkit.core.simulator.debug.TapeSimulator;
 
-public abstract class TapeActor extends NeuralActor{
+public abstract class TapeActor extends NeuralActor {
 
 	private TapeSimulator<NeuralAction> sim;
 	
@@ -28,19 +29,19 @@ public abstract class TapeActor extends NeuralActor{
 		};
 	}
 	public double scoreActor(){
-		while(!sim.isFinished()){
+		while(!sim.isAbsorbing()){
 			if(bn instanceof BasicNetwork){
 			MLData input= new BasicMLData(sim.getStateStats(((BasicNetwork) bn).getInputCount()));
 			MLData output=((BasicNetwork) this.bn).compute(input);
-			sim.improve(output.getData());
+			sim.applyAction(output.getData());
 		}else if(bn instanceof NEATNetwork){
 			MLData input= new BasicMLData(sim.getStateStats(((NEATNetwork) bn).getInputCount()));
 			MLData output=((NEATNetwork) this.bn).compute(input);
-			sim.improve(output.getData());
+			sim.applyAction(output.getData());
 		}
 		}
 		if(track){
-			sim.showState();
+			sim.printState();
 		}
 		return sim.getReward();
 	}

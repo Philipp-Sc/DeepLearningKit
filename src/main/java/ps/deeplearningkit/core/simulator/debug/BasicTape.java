@@ -1,8 +1,8 @@
-package ps.deeplearningkit.core.simulator;
+package ps.deeplearningkit.core.simulator.debug;
 
 import java.util.ArrayList;
 
-public class BasicTape<NeuralElement> implements NeuralTape<NeuralElement>{
+public class BasicTape<NeuralElement> implements NeuralTape<NeuralElement> {
 	
 	private ArrayList<NeuralElement> tape;
 	private int maxTapeSize;

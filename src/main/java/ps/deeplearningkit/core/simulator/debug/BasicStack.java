@@ -1,9 +1,9 @@
-package ps.deeplearningkit.core.simulator;
+package ps.deeplearningkit.core.simulator.debug;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasicStack<NeuralElement> implements NeuralStack<NeuralElement>{
+public class BasicStack<NeuralElement> implements NeuralStack<NeuralElement> {
 	
 	private ArrayList<NeuralElement> stack;
 	private int limit;

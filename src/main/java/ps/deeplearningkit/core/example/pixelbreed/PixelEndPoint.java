@@ -2,10 +2,10 @@ package ps.deeplearningkit.core.example.pixelbreed;
 
 import ps.deeplearningkit.core.search.noveltysearch.Behavior;
 import ps.deeplearningkit.core.search.noveltysearch.RealVectorBehavior;
-import ps.deeplearningkit.core.simulator.NeuralAction;
+import ps.deeplearningkit.core.simulator.debug.NeuralAction;
 
 import java.util.List;
-import ps.deeplearningkit.core.simulator.EndPoint;
+import ps.deeplearningkit.core.simulator.debug.EndPoint;
 /**
  * Created by philipp on 5/5/16.
  */

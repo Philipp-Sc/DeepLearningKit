@@ -1,6 +1,10 @@
-package ps.deeplearningkit.core.simulator;
+package ps.deeplearningkit.core.simulator.debug;
 
-public abstract class TapeSimulator<NeuralElement> implements Simulator{
+import ps.deeplearningkit.core.simulator.Simulator;
+import ps.deeplearningkit.core.simulator.debug.BasicTape;
+import ps.deeplearningkit.core.simulator.debug.NeuralTape;
+
+public abstract class TapeSimulator<NeuralElement> implements Simulator {
 
 	private NeuralTape<NeuralElement> tape;
 	private int iterations;
@@ -9,15 +13,15 @@ public abstract class TapeSimulator<NeuralElement> implements Simulator{
 		tape=new BasicTape<>(maxTapeSize);
 		this.iterations=iterations;
 	}
-	public void improve(double[] choice) {
+	public void applyAction(double[] choice) {
 		tape.movePointer((int)choice[0]);
 		tape.setCurrent(getChoice(choice));
 		iterations--;
 	}
-	public void showState() {
+	public void printState() {
 		System.out.println(tape.toString());
 	}
-	public boolean isFinished() {
+	public boolean isAbsorbing() {
 		if(iterations>0){
 				return false;
 			}else{
