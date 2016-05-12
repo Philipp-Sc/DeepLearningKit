@@ -1,6 +1,6 @@
 package ps.deeplearningkit.core.simulator.debug;
 
-import ps.deeplearningkit.core.search.noveltysearch.Behavior;
+import ps.deeplearningkit.core.search.heuristic.Behavior;
 
 public interface BranchEnd<T> {
 	public abstract String showState();

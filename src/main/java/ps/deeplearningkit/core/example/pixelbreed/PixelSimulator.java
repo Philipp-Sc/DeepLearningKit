@@ -1,8 +1,8 @@
 package ps.deeplearningkit.core.example.pixelbreed;
 
-import ps.deeplearningkit.core.search.noveltysearch.Behavior;
-import ps.deeplearningkit.core.search.noveltysearch.NoveltySearch;
-import ps.deeplearningkit.core.search.noveltysearch.RealVectorBehavior;
+import ps.deeplearningkit.core.search.heuristic.Behavior;
+import ps.deeplearningkit.core.search.heuristic.noveltysearch.NoveltySearch;
+import ps.deeplearningkit.core.search.heuristic.RealVectorBehavior;
 import ps.deeplearningkit.core.search.uct.Simulator;
 import ps.deeplearningkit.core.search.uct.State;
 

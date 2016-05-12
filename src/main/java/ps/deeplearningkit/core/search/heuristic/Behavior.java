@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.noveltysearch;
+package ps.deeplearningkit.core.search.heuristic;
 
 import java.util.List;
 import org.apache.commons.math3.linear.ArrayRealVector;

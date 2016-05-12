@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.abstractnoveltysearch;
+package ps.deeplearningkit.core.search.heuristic.abstractnoveltysearch;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.art.ART1;
 
 import ps.deeplearningkit.core.neuralnetwork.utils.Assistant;
-import ps.deeplearningkit.core.search.noveltysearch.RealVectorBehavior;
+import ps.deeplearningkit.core.search.heuristic.RealVectorBehavior;
 
 /**
  * Classification and clustering is used to provide additional values for the distance calculation.

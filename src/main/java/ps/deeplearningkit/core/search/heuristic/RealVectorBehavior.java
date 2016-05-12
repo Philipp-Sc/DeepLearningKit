@@ -1,14 +1,15 @@
-package ps.deeplearningkit.core.search.noveltysearch;
+package ps.deeplearningkit.core.search.heuristic;
 
 import java.util.List;
 
 import org.apache.commons.math3.linear.ArrayRealVector;
+import ps.deeplearningkit.core.search.heuristic.Behavior;
 
 /**
  * Implementation of Behavior.
  * Getting started quickly.
  */
-public class RealVectorBehavior implements Behavior{
+public class RealVectorBehavior implements Behavior {
 
 	private ArrayRealVector vector;
 	private double maxDistance;

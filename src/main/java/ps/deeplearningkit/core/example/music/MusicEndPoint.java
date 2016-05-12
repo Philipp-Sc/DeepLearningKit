@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.List;
 import javax.sound.midi.InvalidMidiDataException;
 
-import ps.deeplearningkit.core.search.noveltysearch.Behavior;
+import ps.deeplearningkit.core.search.heuristic.Behavior;
 import ps.deeplearningkit.core.simulator.debug.EndPoint;
 import ps.deeplearningkit.core.simulator.debug.NeuralAction;
 

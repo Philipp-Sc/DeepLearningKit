@@ -2,8 +2,8 @@ package ps.deeplearningkit.core.neuralnetwork.smartnetwork;
 
 import org.encog.ml.CalculateScore;
 import ps.deeplearningkit.core.neuralnetwork.SimpleNetworkController;
-import ps.deeplearningkit.core.search.noveltysearch.NoveltySearch;
-import ps.deeplearningkit.core.search.uncommonsearch.UncommonSearch;
+import ps.deeplearningkit.core.search.heuristic.noveltysearch.NoveltySearch;
+import ps.deeplearningkit.core.search.heuristic.uncommonsearch.UncommonSearch;
 
 /**
  * Created by philipp on 5/12/16.

@@ -1,22 +1,24 @@
-package ps.deeplearningkit.core.search.noveltysearch;
+package ps.deeplearningkit.core.search.heuristic.abstractnoveltysearch;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * A simplified version of novelty search.
- * Implement Behavior and you are ready to use this.
- * Replace your fitness function with the use of this class. 
- * 1. set population
- * 2. calculate novelty
- * 3. finish evaluation
- * 
- * @author Most of the code was taken from OliverColeman @see at github: /ahni/src/com/ojcoleman/ahni/evaluation/novelty/
- */
-public class NoveltySearch {
+import org.encog.ml.MLClassification;
+import org.encog.neural.som.SOM;
 
+import ps.deeplearningkit.core.MainController;
+import ps.deeplearningkit.core.neuralnetwork.utils.Assistant;
+import ps.deeplearningkit.core.search.heuristic.Behavior;
+/**
+ * 
+ * This AbstractNoveltySearch is different to NoveltySearch in the following aspect:
+ * - The behavior is classified using different NeuralNetworks.
+ * - These classifications are then used to determine the distance in behavior space.
+ */
+public class AbstractNoveltySearch {
 	/**
 	 * The number of nearest neighbors to consider when determining the sparseness
 	 *  in behavior space to decide if the new behavior should be added to the archive.  
@@ -34,14 +36,14 @@ public class NoveltySearch {
 	/**
 	 * If a new induvidual's novelty is high, it is typically added to the archive.
 	 */
-	public List<Behavior> archive=Collections.synchronizedList(new ArrayList<Behavior>());
-	private List<Behavior> toArchive=new ArrayList<>();
+	public List<ClassifiedBehavior> archive=Collections.synchronizedList(new ArrayList<ClassifiedBehavior>());
+	private List<ClassifiedBehavior> toArchive=new ArrayList<>();
 	/**
 	 * Current behaviors in the current population. Similar to actions used by MCS.
 	 * These behaviors may be initialized for the current state.
 	 * Run testNovelty(Behavior behavior) for all individuals.
 	 */
-	private List<Behavior> population=new ArrayList<>();
+	private List<ClassifiedBehavior> population=new ArrayList<>();
 	
 	/*
 	 * Count number of generations in a row for which no behavior is added to the archive.
@@ -56,10 +58,39 @@ public class NoveltySearch {
 	 */
 	private double noveltyThresholdChangeFactor=1;
 	
-	public NoveltySearch(){
+	/*
+	 * Iterations for the som
+	 */
+	private int iterations;
+	/*
+	 * The precision value describes the number of decimal places of the behavior values to consider.
+	 * (1.x*precision)
+	 */
+	private int precision;
+	
+	private List<MLClassification> networks;
+	/*
+	 * Needed to tell this class which MLClassification to use.
+	 */
+	public AbstractNoveltySearch(String som,int iterations,String art1,int precision){
+		this.iterations=iterations;
+		this.precision=precision;
+		networks=new ArrayList<>();
+		networks.add(MainController.getSimpleNetworkController().getART1Network(art1));
+		networks.add(MainController.getSimpleNetworkController().getSomNetwork(som));
 	}
+	public AbstractNoveltySearch(String som,int iterations,String art1,int precision,int doubleCount,int somClasses) throws IOException{
+		this.iterations=iterations;
+		this.precision=precision;
+		networks=new ArrayList<>();
+		MainController.getSimpleNetworkController().createART1(art1, doubleCount, precision, 10000);
+		MainController.getSimpleNetworkController().createSOM(som, doubleCount, somClasses);
+		networks.add(MainController.getSimpleNetworkController().getART1Network(art1));
+		networks.add(MainController.getSimpleNetworkController().getSomNetwork(som));
+	}
+	
 	public void reset(){
-		archive=Collections.synchronizedList(new ArrayList<Behavior>());
+		archive=Collections.synchronizedList(new ArrayList<ClassifiedBehavior>());
 		toArchive=new ArrayList<>(neighborsToConsider);
 		population=new ArrayList<>();
 		noNewArchiveCount=0;
@@ -69,8 +100,9 @@ public class NoveltySearch {
 	 * Because of the use of toArchive and archive this method can be called by multiple threads asynchronously.
 	 * @param behavior
 	 * @return novelty in the range from [0,1].
+	 * @throws IOException 
 	 */
-	public double testNovelty(Behavior behavior){
+	public double testNovelty(ClassifiedBehavior behavior) throws IOException{
 		int behaviorsCount=toArchive.size()+population.size();
 		double[] distanceOfBehavior=new double[behaviorsCount];
 		int index=0;
@@ -78,8 +110,8 @@ public class NoveltySearch {
 		/*
 		 * Get distances to all behaviors for the passed behavior.
 		 */
-		for(Behavior novelBehavior:toArchive){
-			distanceOfBehavior[index]=behavior.distanceFrom(novelBehavior);
+		for(ClassifiedBehavior novelBehavior:toArchive){
+			distanceOfBehavior[index]=behavior.distanceFrom(novelBehavior,networks,precision);
 			/*
 			 * If the behaviors are approximately equal increment inArchiveCount.
 			 */
@@ -88,8 +120,8 @@ public class NoveltySearch {
 			}
 			index++;
 		}
-		for(Behavior normalBehavior:population){
-			distanceOfBehavior[index]=behavior.distanceFrom(normalBehavior);
+		for(ClassifiedBehavior normalBehavior:population){
+			distanceOfBehavior[index]=behavior.distanceFrom(normalBehavior,networks,precision);
 			index++;
 		}
 		/*
@@ -121,7 +153,7 @@ public class NoveltySearch {
 		}
 		return avgDistanceOfBehavior;
 	}
-	private boolean containsSimilar(List<Behavior> behaviors,Behavior b,double threshold){
+	private boolean containsSimilar(List<ClassifiedBehavior> behaviors,ClassifiedBehavior b,double threshold){
 		if(behaviors.isEmpty()){
 			return false;
 		}
@@ -138,10 +170,11 @@ public class NoveltySearch {
 	 * This may be called before evaluating behaviors from a population to allow determining the novelty.
 	 * @param behaviors
 	 */
-	public synchronized void setCurrentPopulation(List<Behavior> behaviors){
+	public synchronized void setCurrentPopulation(List<ClassifiedBehavior> behaviors){
 		this.population=behaviors;
+		//updateSOM(population); // maybe better not to update som to often with the normal population?
 	}
-	public synchronized void addToCurrentPopulation(Behavior b){
+	public synchronized void addToCurrentPopulation(ClassifiedBehavior b){
 		population.add(b);
 	}
 	/**
@@ -159,7 +192,25 @@ public class NoveltySearch {
 			}
 		}
 		archive.addAll(toArchive);
+		updateSOM(archive);
 		toArchive.clear();
 		population=new ArrayList<>();
+	}
+	private void updateSOM(List<ClassifiedBehavior> b){
+		for(MLClassification network:networks){
+			if(network instanceof SOM){
+				Assistant.trainSOM(((SOM)network), behaviorDataSet(b), iterations);
+			}
+		}
+	}
+	private double[][] behaviorDataSet(List<ClassifiedBehavior> b){
+		if(b.size()==0){
+			return new double[][]{};
+		}
+		double[][] data=new double[b.size()][];
+		for(int i=0;i<b.size();i++){
+			data[i]=b.get(i).getVector().getDataRef();
+		}
+		return data;
 	}
 }

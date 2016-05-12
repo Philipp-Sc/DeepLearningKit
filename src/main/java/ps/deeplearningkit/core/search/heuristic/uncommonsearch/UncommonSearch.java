@@ -1,9 +1,9 @@
-package ps.deeplearningkit.core.search.uncommonsearch;
+package ps.deeplearningkit.core.search.heuristic.uncommonsearch;
 
 import org.encog.ml.MLClassification;
 import org.encog.neural.art.ART1;
-import ps.deeplearningkit.core.search.abstractnoveltysearch.ClassifiedBehavior;
-import ps.deeplearningkit.core.search.noveltysearch.Behavior;
+import ps.deeplearningkit.core.search.heuristic.abstractnoveltysearch.ClassifiedBehavior;
+import ps.deeplearningkit.core.search.heuristic.Behavior;
 
 import java.util.ArrayList;
 import java.util.Collections;
