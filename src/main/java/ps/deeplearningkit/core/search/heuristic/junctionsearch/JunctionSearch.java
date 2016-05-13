@@ -6,11 +6,11 @@ import java.util.List;
 /**
  * Created by philipp on 5/8/16.
  * Searching for unknown junctions.
+ * TODO: Could be extended with novelty search. (Would not lose much, but gain a wider space.)
  */
 public class JunctionSearch {
 
     private HashSet<Junction> knownJunctions=new HashSet<>();
-    // TODO: second metric: junctions everything tend to lead to (waterfall)
     /**
      * @param junction
      * @return a high value if the junction leads to many unknown junctions.

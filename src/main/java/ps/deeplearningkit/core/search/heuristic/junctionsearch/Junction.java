@@ -8,6 +8,7 @@ import java.util.List;
  */
 public interface Junction {
 
+    List<Junction> getBranches();
     /**
      * @param known Junctions to discard from the branches.
      * @return if known.size() was 0, the return value would be all branches.
