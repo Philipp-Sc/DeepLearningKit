@@ -6,10 +6,13 @@ import java.util.List;
 /**
  * Created by philipp on 5/8/16.
  * Searching for unknown junctions.
- * TODO: Could be extended with novelty search. (Would not lose much, but gain a wider space.)
  */
 public class JunctionSearch {
 
+    /**
+     * Because of the getUniqueJunctions method are knownJunctions more like
+     * equivalence classes
+     */
     private HashSet<Junction> knownJunctions=new HashSet<>();
     /**
      * @param junction

@@ -13,6 +13,7 @@ public interface Behavior {
 	// determine the distance in behavior space in the range of [0,1].
 	public abstract double distanceFrom(Behavior b);
 	// Provide a default threshold in the range of [0,1].
+	// This threshold tells when a behavior is new and different.
 	public abstract double defaultThreshold();
 	// can be overridden.
 	public abstract ArrayRealVector getVector();

@@ -1,12 +1,14 @@
 package ps.deeplearningkit.core.search.heuristic.junctionsearch;
 
+import ps.deeplearningkit.core.search.heuristic.Behavior;
+
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by philipp on 5/12/16.
  */
-public interface Junction {
+public interface Junction extends Behavior{
 
     List<Junction> getBranches();
     /**
