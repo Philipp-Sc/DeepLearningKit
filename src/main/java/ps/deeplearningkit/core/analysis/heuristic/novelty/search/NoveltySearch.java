@@ -1,6 +1,6 @@
-package ps.deeplearningkit.core.search.heuristic.noveltysearch;
+package ps.deeplearningkit.core.analysis.heuristic.novelty.search;
 
-import ps.deeplearningkit.core.search.heuristic.Behavior;
+import ps.deeplearningkit.core.analysis.heuristic.Behavior;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A simplified version of novelty search.
+ * A simplified version of novelty analysis.
  * Implement Behavior and you are ready to use this.
  * Replace your fitness function with the use of this class. 
  * 1. set population

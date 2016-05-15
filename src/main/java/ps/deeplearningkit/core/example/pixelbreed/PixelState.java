@@ -1,6 +1,6 @@
 package ps.deeplearningkit.core.example.pixelbreed;
 
-import ps.deeplearningkit.core.search.uct.State;
+import ps.deeplearningkit.core.analysis.uct.State;
 
 import java.util.ArrayList;
 import java.util.List;

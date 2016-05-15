@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.uct;
+package ps.deeplearningkit.core.analysis.uct;
 
 /**
  * Represents a generative model. All information should be kept in a state variable

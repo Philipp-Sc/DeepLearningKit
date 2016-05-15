@@ -1,6 +1,6 @@
-package ps.deeplearningkit.core.search.heuristic.junctionsearch;
+package ps.deeplearningkit.core.analysis.heuristic.junction;
 
-import ps.deeplearningkit.core.search.heuristic.Behavior;
+import ps.deeplearningkit.core.analysis.heuristic.Behavior;
 
 import java.util.Collection;
 import java.util.List;

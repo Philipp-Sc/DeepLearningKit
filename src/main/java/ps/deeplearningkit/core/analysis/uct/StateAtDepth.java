@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.uct;
+package ps.deeplearningkit.core.analysis.uct;
 
 /**
  * Just hashable class containing a state/depth pair.

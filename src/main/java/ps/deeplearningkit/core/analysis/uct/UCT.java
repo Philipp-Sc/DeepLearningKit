@@ -1,20 +1,20 @@
-package ps.deeplearningkit.core.search.uct;
+package ps.deeplearningkit.core.analysis.uct;
 
 import java.util.Random;
 
-import ps.deeplearningkit.core.search.uct.UCTNodes.UCTNodeStore;
-import ps.deeplearningkit.core.search.uct.UCTNodes.UCTStateNode;
-import ps.deeplearningkit.core.search.uct.Utils.Maximizer;
+import ps.deeplearningkit.core.analysis.uct.UCTNodes.UCTNodeStore;
+import ps.deeplearningkit.core.analysis.uct.UCTNodes.UCTStateNode;
+import ps.deeplearningkit.core.analysis.uct.Utils.Maximizer;
 
 /**
- * UCT Planning algorithm. Takes a simulator and search parameters, then call
+ * UCT Planning algorithm. Takes a simulator and analysis parameters, then call
  * plan() to do UCT planning to estimate Q values at root node.
  * 
- * This implementation of UCT builds a search tree explicitly. An alternative 
+ * This implementation of UCT builds a analysis tree explicitly. An alternative
  * implementation uses a hash function to retain state/depth pairs. The latter method
  * has the advantage of saving memory, but this tree-based implementation requires 
  * fewer evaluations of the hash function and has the added benefit of providing easy
- * visualization of the UCT search tree. If the memory requirements are too high
+ * visualization of the UCT analysis tree. If the memory requirements are too high
  * then the flat implementation would be better. As it stands, the bulk of UCT's 
  * computation usually lies in the simulation steps and state reward evaluation.
  * 
@@ -40,7 +40,7 @@ public class UCT {
 	 * @param trajectories
 	 *            Number of trajectories per planning step.
 	 * @param depth
-	 *            Maximum search depth per trajectory.
+	 *            Maximum analysis depth per trajectory.
 	 * @param gamma
 	 *            Discount factor.
 	 * @param random

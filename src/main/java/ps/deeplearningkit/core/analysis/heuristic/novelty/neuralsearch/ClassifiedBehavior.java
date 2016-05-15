@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.heuristic.abstractnoveltysearch;
+package ps.deeplearningkit.core.analysis.heuristic.novelty.neuralsearch;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.art.ART1;
 
 import ps.deeplearningkit.core.neuralnetwork.utils.Assistant;
-import ps.deeplearningkit.core.search.heuristic.RealVectorBehavior;
+import ps.deeplearningkit.core.analysis.heuristic.RealVectorBehavior;
 
 /**
  * Classification and clustering is used to provide additional values for the distance calculation.
@@ -26,7 +26,7 @@ public class ClassifiedBehavior extends RealVectorBehavior{
 		super(values);
 	}
 	/**
-	 * characterizes the values with neural networks.
+	 * characterizes the values with neuralsearch networks.
 	 * @param networks implementing MLMethods.
 	 * @return an array of classifications for the behavior.
 	 * @throws IOException

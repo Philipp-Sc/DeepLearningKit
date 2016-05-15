@@ -5,15 +5,13 @@ public interface Simulator {
 	/**
 	 * This (re-)initializes the simulator.
 	 */
-	void init();
+	void initEpisode();
+
+	void setState(State state);
+	State getState();
 
 	/**
-	 * This is useful for using multiple threads.
-	 * @return a exact copy of this simulator.
-     */
-	Simulator copy();
-	/**
-	 * This applies an action, output produced by a neural network.
+	 * This applies an action, output produced by a neuralsearch network.
 	 * @param action array with values mostly between 0 and 1.
      */
 	void applyAction(double[] action);
@@ -32,5 +30,5 @@ public interface Simulator {
 	 */
 	double[] getInput();
 
-	void printState();
+	void printStatus();
 }

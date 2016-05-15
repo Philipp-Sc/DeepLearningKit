@@ -74,7 +74,7 @@ public class AdvancedNetworkController extends NetworkController{
 	 * @throws IOException 
 	 */
 	/**
-	 * Creates a basic neural network.
+	 * Creates a basic neuralsearch network.
 	 * @param key
 	 * @param inputSize
 	 * @param outputSize
@@ -148,7 +148,7 @@ public class AdvancedNetworkController extends NetworkController{
 	 * @return class
 	 * @throws IOException 
 	 */
-	public int clusterART1(String key,boolean[] input) throws IOException{
+	public int classifyART1(String key, boolean[] input) throws IOException{
 		ART1 logic=this.getART1Network(key);
 		int outputCount=logic.getOutputCount();
 		BiPolarNeuralData in=new BiPolarNeuralData(input);

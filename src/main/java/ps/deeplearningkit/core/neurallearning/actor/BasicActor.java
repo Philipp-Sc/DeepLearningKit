@@ -22,13 +22,12 @@ public class BasicActor extends NeuralActor {
 
     @Override
     public double scoreActor() {
-        Simulator copiedSimulator=this.simulator.copy();
-        copiedSimulator.init();
-        while(!copiedSimulator.isAbsorbing()){
+        simulator.initEpisode();
+        while(!simulator.isAbsorbing()){
             if(bn instanceof NEATNetwork){
-                MLData input= new BasicMLData(copiedSimulator.getInput());
+                MLData input= new BasicMLData(simulator.getInput());
                 MLData output=((NEATNetwork) this.bn).compute(input);
-                copiedSimulator.applyAction(output.getData());
+                simulator.applyAction(output.getData());
             }
         }
         track();
@@ -36,7 +35,7 @@ public class BasicActor extends NeuralActor {
     }
     private synchronized void track(){
         if(track){
-            simulator.printState();
+            simulator.printStatus();
         }
     }
 

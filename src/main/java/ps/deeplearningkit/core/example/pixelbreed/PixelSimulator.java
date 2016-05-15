@@ -1,10 +1,10 @@
 package ps.deeplearningkit.core.example.pixelbreed;
 
-import ps.deeplearningkit.core.search.heuristic.Behavior;
-import ps.deeplearningkit.core.search.heuristic.noveltysearch.NoveltySearch;
-import ps.deeplearningkit.core.search.heuristic.RealVectorBehavior;
-import ps.deeplearningkit.core.search.uct.Simulator;
-import ps.deeplearningkit.core.search.uct.State;
+import ps.deeplearningkit.core.analysis.heuristic.Behavior;
+import ps.deeplearningkit.core.analysis.heuristic.novelty.search.NoveltySearch;
+import ps.deeplearningkit.core.analysis.heuristic.RealVectorBehavior;
+import ps.deeplearningkit.core.analysis.uct.Simulator;
+import ps.deeplearningkit.core.analysis.uct.State;
 
 import java.util.HashSet;
 import java.util.Set;

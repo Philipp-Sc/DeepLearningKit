@@ -52,13 +52,13 @@ public abstract class TapeActor extends NeuralActor {
 	protected abstract double getReward(NeuralTape<NeuralAction> tape);
 	/**
 	 * 
-	 * @param choice made by the neural network
+	 * @param choice made by the neuralsearch network
 	 * @return different representation of the choice
 	 */
 	protected abstract NeuralAction getChoice(double[] choice);
 	/**
 	 * Only double values from -1 to 1 allowed!
-	 * @return give the neural network some feedback with different statistics.
+	 * @return give the neuralsearch network some feedback with different statistics.
 	 */
 	protected abstract double[] getStateStats(int size);
 	

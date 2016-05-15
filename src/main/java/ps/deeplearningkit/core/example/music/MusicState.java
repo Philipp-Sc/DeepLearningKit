@@ -1,6 +1,6 @@
 package ps.deeplearningkit.core.example.music;
 
-import ps.deeplearningkit.core.search.uct.State;
+import ps.deeplearningkit.core.analysis.uct.State;
 
 public class MusicState implements State{
 

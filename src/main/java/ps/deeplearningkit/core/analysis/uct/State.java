@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.uct;
+package ps.deeplearningkit.core.analysis.uct;
 
 /**
  * State used for planning. Must have equality and hashcode functions as well as a copy function

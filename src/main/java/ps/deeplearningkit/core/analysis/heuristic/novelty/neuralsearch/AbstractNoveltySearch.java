@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.heuristic.abstractnoveltysearch;
+package ps.deeplearningkit.core.analysis.heuristic.novelty.neuralsearch;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import org.encog.neural.som.SOM;
 
 import ps.deeplearningkit.core.MainController;
 import ps.deeplearningkit.core.neuralnetwork.utils.Assistant;
-import ps.deeplearningkit.core.search.heuristic.Behavior;
+import ps.deeplearningkit.core.analysis.heuristic.Behavior;
 /**
  * 
  * This AbstractNoveltySearch is different to NoveltySearch in the following aspect:

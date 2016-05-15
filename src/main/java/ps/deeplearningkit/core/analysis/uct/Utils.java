@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.search.uct;
+package ps.deeplearningkit.core.analysis.uct;
 
 import java.util.Random;
 

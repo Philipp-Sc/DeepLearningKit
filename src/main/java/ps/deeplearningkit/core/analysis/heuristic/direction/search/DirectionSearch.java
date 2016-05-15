@@ -1,6 +1,6 @@
-package ps.deeplearningkit.core.search.heuristic.directionsearch;
+package ps.deeplearningkit.core.analysis.heuristic.direction.search;
 
-import ps.deeplearningkit.core.search.heuristic.junctionsearch.Junction;
+import ps.deeplearningkit.core.analysis.heuristic.junction.Junction;
 
 import java.util.ArrayList;
 import java.util.HashMap;

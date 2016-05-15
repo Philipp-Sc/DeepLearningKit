@@ -73,14 +73,14 @@ public abstract class LinearActor extends NeuralActor {
 	protected abstract double getReward(NeuralStack<NeuralAction> stack);
 	/**
 	 * Used to add T (the action) to the stack.
-	 * @param choice made by the neural network
+	 * @param choice made by the neuralsearch network
 	 * @return different representation of the choice
 	 */
 	protected abstract NeuralAction toActionObject(double[] choice);
 	/**
 	 * Only double values from -1 to 1 allowed!
 	 * @param list
-	 * @return give the neural network some feedback.
+	 * @return give the neuralsearch network some feedback.
 	 */
 	protected abstract double[] getInput(List<NeuralAction> list);
 	

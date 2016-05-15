@@ -42,7 +42,7 @@ public class SimpleNetworkController extends AdvancedNetworkController{
 	 * 
 	 * @throws IOException 
 	 */
-	public int clusterART1(String key,double[] input,int precision) throws IOException{
+	public int classifyART1(String key, double[] input, int precision) throws IOException{
 		int maxBinaryDigits=((Double) Math.ceil(Math.log(1*precision)/Math.log(2))).intValue();
 		ArrayList<boolean[]> list=new ArrayList<>();
 		for(double each:input){
@@ -59,7 +59,7 @@ public class SimpleNetworkController extends AdvancedNetworkController{
 				index++;
 			}
 		}
-		return clusterART1(key, bits);
+		return classifyART1(key, bits);
 	}
 	/**
 	 * BasicNeuralNetworks

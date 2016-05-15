@@ -3,7 +3,7 @@ package ps.deeplearningkit.core.simulator.debug;
 import java.util.List;
 
 /**
- *  This class constructs a state T from a number of neural actions.
+ *  This class constructs a state T from a number of neuralsearch actions.
  * @author Philipp Schlütermann
  *
  * @param <T>

@@ -1,7 +1,7 @@
 package ps.deeplearningkit.core.example.pixelbreed;
 
-import ps.deeplearningkit.core.search.heuristic.Behavior;
-import ps.deeplearningkit.core.search.heuristic.RealVectorBehavior;
+import ps.deeplearningkit.core.analysis.heuristic.Behavior;
+import ps.deeplearningkit.core.analysis.heuristic.RealVectorBehavior;
 import ps.deeplearningkit.core.simulator.debug.NeuralAction;
 
 import java.util.List;
