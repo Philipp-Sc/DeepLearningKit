@@ -83,6 +83,7 @@ public class SimpleNetworkController extends AdvancedNetworkController{
 		NeuralSimulatedAnnealing train=	new NeuralSimulatedAnnealing(bn, someScore, startTemp,stopTemp ,cycles);
 		for(int i=0;i<iterations;i++){
 			train.iteration();
+			System.out.println("#Epoch: "+train.getIteration()+"Error: "+train.getError());
 		}
 		train.finishTraining();
 		this.saveBasicNetworks();

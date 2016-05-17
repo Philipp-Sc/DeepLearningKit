@@ -1,4 +1,4 @@
-package ps.deeplearningkit.core.neurallearning.debug;
+/*package ps.deeplearningkit.core.neurallearning.debug;
 
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
@@ -48,18 +48,18 @@ public abstract class TapeActor extends NeuralActor {
 	/**
 	 * Game logic, here you use the history to evaluate the result.
 	 * @return double reward used to archive a score
-	 */
+	/
 	protected abstract double getReward(NeuralTape<NeuralAction> tape);
 	/**
 	 * 
 	 * @param choice made by the neuralsearch network
 	 * @return different representation of the choice
-	 */
+
 	protected abstract NeuralAction getChoice(double[] choice);
 	/**
 	 * Only double values from -1 to 1 allowed!
 	 * @return give the neuralsearch network some feedback with different statistics.
-	 */
+
 	protected abstract double[] getStateStats(int size);
 	
-}
+}*/

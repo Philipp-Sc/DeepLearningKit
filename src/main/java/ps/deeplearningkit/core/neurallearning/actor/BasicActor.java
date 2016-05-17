@@ -21,7 +21,7 @@ public class BasicActor extends NeuralActor {
     }
 
     @Override
-    public double scoreActor() {
+    public synchronized double scoreActor() {
         simulator.initEpisode();
         while(!simulator.isAbsorbing()){
             if(bn instanceof NEATNetwork){
