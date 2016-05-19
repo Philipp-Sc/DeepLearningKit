@@ -55,9 +55,9 @@ public class SmartSimulator<T> implements Simulator{
         double[] state=getState().getBehavior().getVector().getDataRef();
         double[] c=new double[]{};//getClassification();
         double[] u=new double[]{};//getUncommonnes();
-        double[] n=getNovelty();
-        double[] d=getDirection();
-        double[] j=getJunction();
+        double[] n=new double[]{};//getNovelty();
+        double[] d=new double[]{};//getDirection();
+        double[] j=new double[]{};//getJunction();
         double r=getReward();
         double[] data=new double[state.length+c.length+u.length+n.length+d.length+j.length+1];
         int i=0;

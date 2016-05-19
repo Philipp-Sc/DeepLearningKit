@@ -16,7 +16,7 @@ import java.util.Random;
  */
 public class Maze implements State<MazeMovement>{
 
-    private final int maxActions= Application.random.nextInt(45);
+    private final int maxActions= Application.random.nextInt(50);
 
     private enum Obj {WALL,SPACE,START,EXIT,UNKNOWN,VISITED}
     private Obj[][] maze;
@@ -47,8 +47,8 @@ public class Maze implements State<MazeMovement>{
     }
     private void initMaze(){
         maze=new Obj[10][10];
-        maze[0]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[1]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[0]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[1]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
         maze[2]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
         maze[3]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
         maze[4]=new Obj[]{Obj.WALL,Obj.EXIT,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL};
@@ -129,6 +129,7 @@ public class Maze implements State<MazeMovement>{
     @Override
     public Behavior getBehavior() {
         Obj[][] maze=getAgentMazeView();
+
         Obj[][] view=new Obj[3][3];
         if(x.get(x.size()-1)>0) {
             if(y.get(y.size() - 1)>0){
