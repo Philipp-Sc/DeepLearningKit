@@ -130,6 +130,7 @@ public class SmartSimulator<T> implements Simulator{
         double value=this.junctionSearch.testJunction(junction);
         return new double[]{value};
     }
+    @Override
     public double getReward(){
         return state.getReward();
     }

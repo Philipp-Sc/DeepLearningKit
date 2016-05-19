@@ -2,7 +2,7 @@ package ps.deeplearningkit.core.neuralnetwork;
 
 import java.io.IOException;
 import org.encog.Encog;
-import org.encog.engine.network.activation.ActivationLOG;
+import org.encog.engine.network.activation.*;
 import org.encog.mathutil.rbf.RBFEnum;
 import org.encog.ml.CalculateScore;
 import org.encog.ml.data.MLData;
@@ -175,6 +175,7 @@ public class AdvancedNetworkController extends NetworkController{
 	 */
 	public void createNEATPopulation(String key,int inputCount,int outputCount,int populationSize) throws IOException{
 		NEATPopulation pop=new NEATPopulation(inputCount, outputCount, populationSize);
+		pop.setNEATActivationFunction(new ActivationBiPolar());
 		pop.reset();
 		addNEATPopulation(key, pop);
 	}
@@ -186,7 +187,7 @@ public class AdvancedNetworkController extends NetworkController{
 	 * @throws IOException 
 	 */
 	public void trainNEATPopulation(String key,CalculateScore score,double scoreValue,int iterations) throws IOException{
-		NEATPopulation pop=this.getNEATPopulation(key);
+		final NEATPopulation pop=this.getNEATPopulation(key);
 		final EvolutionaryAlgorithm train=NEATUtil.constructNEATTrainer(pop, score);
 		do{
 			train.iteration();
@@ -194,17 +195,22 @@ public class AdvancedNetworkController extends NetworkController{
 		}while(train.getIteration()<=iterations && train.getError()<scoreValue);
 		train.finishTraining();
 		Encog.getInstance().shutdown();
-		this.addNEATPopulation(key, (NEATPopulation)train.getPopulation());
+
+		// might not work
+		addNEATPopulation(key, pop);
 	}
 	/**
 	 * NEATNetworks are always retrieved from their populations.
 	 * @return NEATNetwork
 	 */
-	public NEATNetwork getBestNEATNetwork(String key,CalculateScore score){
+	public NEATNetwork getBestNEATNetwork(String key){
+
+
+		// does not work at all!!
 		NEATPopulation pop=this.getNEATPopulation(key);
-		final EvolutionaryAlgorithm train=NEATUtil.constructNEATTrainer(pop, score);
-		train.finishTraining();
-		return (NEATNetwork)train.getCODEC().decode(train.getBestGenome());
+		System.out.println("best score?:"+pop.getBestGenome().getScore());
+		return (NEATNetwork)pop.getCODEC().decode(pop.getBestGenome());
+		//return (NEATNetwork)train.getCODEC().decode(train.getBestGenome());
 	}
 	/**
 	 * HyperNeat Networks

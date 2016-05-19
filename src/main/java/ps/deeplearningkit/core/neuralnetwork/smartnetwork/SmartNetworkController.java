@@ -56,7 +56,8 @@ public class SmartNetworkController extends SimpleNetworkController{
         NeuralActor neuralActor = new BasicActor(true, simulator);
         MainController.getAdvancedNetworkController().createNEATPopulation(key, 26, 4, 1500);
         MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 999, 1);
-        NEATNetwork nnn = MainController.getAdvancedNetworkController().getBestNEATNetwork(key, someScore);
+
+        NEATNetwork nnn = MainController.getAdvancedNetworkController().getBestNEATNetwork(key);
 
         neuralActor.setTrack(true);
         neuralActor.setMLMethod(nnn);

@@ -9,13 +9,14 @@ import ps.deeplearningkit.core.simulator.State;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by philipp on 5/16/16.
  */
 public class Maze implements State<MazeMovement>{
 
-    private final int maxActions=20;
+    private final int maxActions= Application.random.nextInt(45);
 
     private enum Obj {WALL,SPACE,START,EXIT,UNKNOWN,VISITED}
     private Obj[][] maze;
@@ -46,15 +47,15 @@ public class Maze implements State<MazeMovement>{
     }
     private void initMaze(){
         maze=new Obj[10][10];
-        maze[0]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[1]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[2]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[3]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[4]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[5]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[6]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.EXIT,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[7]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[8]=new Obj[]{Obj.WALL,Obj.START,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[0]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[1]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[2]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[3]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[4]=new Obj[]{Obj.WALL,Obj.EXIT,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL};
+        maze[5]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL};
+        maze[6]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL};
+        maze[7]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL};
+        maze[8]=new Obj[]{Obj.WALL,Obj.START,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL};
         maze[9]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
         initStartingPosition();
         initExitPosition();
@@ -128,6 +129,57 @@ public class Maze implements State<MazeMovement>{
     @Override
     public Behavior getBehavior() {
         Obj[][] maze=getAgentMazeView();
+        Obj[][] view=new Obj[3][3];
+        if(x.get(x.size()-1)>0) {
+            if(y.get(y.size() - 1)>0){
+                view[0][0] = maze[x.get(x.size() - 1) - 1][y.get(y.size() - 1) - 1];
+            }else{
+                view[0][0] = Obj.WALL;
+            }
+            view[0][1] = maze[x.get(x.size() - 1) - 1][y.get(y.size() - 1)];
+            if(y.get(y.size() - 1)<maze[0].length) {
+                view[0][2] = maze[x.get(x.size() - 1) - 1][y.get(y.size() - 1) + 1];
+            }else{
+                view[0][2] = Obj.WALL;
+            }
+        }else{
+            view[0][0] = Obj.WALL;
+            view[0][1] = Obj.WALL;
+            view[0][2] = Obj.WALL;
+        }
+
+        if(y.get(y.size() - 1)>0){
+            view[1][0]=maze[x.get(x.size()-1)][y.get(y.size()-1)-1];
+        }else{
+            view[1][0] = Obj.WALL;
+        }
+        view[1][1]=maze[x.get(x.size()-1)][y.get(y.size()-1)];
+        if(y.get(y.size() - 1)<maze[0].length){
+            view[1][2]=maze[x.get(x.size()-1)][y.get(y.size()-1)+1];
+        }else{
+            view[1][2] = Obj.WALL;
+        }
+
+        if(x.get(x.size()-1)<maze.length) {
+            if(y.get(y.size() - 1)>0){
+                view[2][0] = maze[x.get(x.size() - 1) + 1][y.get(y.size() - 1) - 1];
+            }else{
+                view[2][0] = Obj.WALL;
+            }
+            view[2][1] = maze[x.get(x.size() - 1) + 1][y.get(y.size() - 1)];
+            if(y.get(y.size() - 1)<maze[0].length){
+                view[2][2] = maze[x.get(x.size() - 1) + 1][y.get(y.size() - 1) + 1];
+            }else{
+                view[2][2] = Obj.WALL;
+            }
+        }else{
+            view[2][0] = Obj.WALL;
+            view[2][1] = Obj.WALL;
+            view[2][2] = Obj.WALL;
+
+        }
+        maze=view;
+
         double[][] agentMaze=new double[maze.length][maze[0].length];
         double val=1/6;
         for(int x=0;x<agentMaze.length;x++){
@@ -187,12 +239,17 @@ public class Maze implements State<MazeMovement>{
     @Override
     public void applyAction(MazeMovement action) {
         if(!isDead) {
-            if(action.transformX(2)==0 && action.transformY(2)==0){
-                isDead=true;
+            if(action.transformX(0)==0 && action.transformY(0)==0){
                 return;
             }
             int x = action.transformX(this.x.get(this.x.size() - 1));
             int y = action.transformY(this.y.get(this.y.size() - 1));
+            if(this.x.size()>=2){
+                if(this.x.get(this.x.size()-2)==x && this.y.get(this.y.size()-2)==y){
+                    isDead=true;
+                    return;
+                }
+            }
             if (x >= 0 && x < maze.length && y >= 0 && y < maze[0].length) {
                 if (maze[x][y].equals(Obj.WALL)) {
                     isDead = true;
@@ -209,8 +266,16 @@ public class Maze implements State<MazeMovement>{
     }
     private boolean isLegal(MazeMovement action){
         if(!isDead) {
+            if(action.transformX(0)==0 && action.transformY(0)==0){
+                return false;
+            }
             int x = action.transformX(this.x.get(this.x.size() - 1));
             int y = action.transformY(this.y.get(this.y.size() - 1));
+            if(this.x.size()>=2){
+                if(this.x.get(this.x.size()-2)==x && this.y.get(this.y.size()-2)==y){
+                    return false;
+                }
+            }
             if (x >= 0 && x < maze.length && y >= 0 && y < maze[0].length) {
                 if (maze[x][y].equals(Obj.WALL)) {
                    return false;
@@ -227,76 +292,31 @@ public class Maze implements State<MazeMovement>{
 
     @Override
     public MazeMovement toAction(double[] action) {
-        boolean hNone=false;
-        boolean vNone=false;
-        boolean left=false;
-        boolean down=false;
-        if(action[0]>0.5){
-            hNone=true;
-        }
-        if(action[3]<0.5 && action[3]>0){
-            vNone=true;
-        }
-        if(action[2]>0.5){
-            left=true;
-        }
-        if(action[2]>0.5){
-            down=true;
-        }
-        if(hNone && vNone){
-            return new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.NONE);
-        }else if(hNone){
-            if(down){
-                return new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.DOWN);
-            }else{
-                return new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.UP);
-            }
-        }else if(vNone){
-            if(left){
-                return new MazeMovement(MazeMovement.Horizontal.LEFT, MazeMovement.Vertical.NONE);
-            }else{
-                return new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.NONE);
-            }
-        }else {
-            if(down && left){
-                return new MazeMovement(MazeMovement.Horizontal.LEFT, MazeMovement.Vertical.DOWN);
-            }else if(down){
-                return new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.DOWN);
-            }else  if(left){
-                return new MazeMovement(MazeMovement.Horizontal.LEFT, MazeMovement.Vertical.UP);
-            }else{
-                return new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.UP);
+        int temp=0;
+        MazeMovement mm=null;
+        for(int i=0;i<Math.min(4,action.length);i++){
+            if(action[i]==1){
+                temp=i;
             }
         }
-
-        /*NormalizedField normalizedField=new NormalizedField(NormalizationAction.Normalize,"action",9,1,0.9,-0.9);
-        int a=(int)normalizedField.deNormalize(action[0]);
-        //System.out.println(a);
-        return new MazeMovement(a);*/
-       /* double val=1.0/8.0;
-        for(int i=1;i<=8;i++){
-            if(action[0]<=i*val){
-                return new MazeMovement(i+1);
-            }
-        }*/
-       // System.out.println("Possible Error!!"+action[0]);
-       // return new MazeMovement(9);
+        if(temp==0){
+            mm= new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.NONE);
+        }else if(temp==1){
+            mm= new MazeMovement(MazeMovement.Horizontal.LEFT, MazeMovement.Vertical.NONE);
+        }else if(temp==2){
+            mm= new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.UP);
+        }else if(temp==3){
+            mm= new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.DOWN);
+        }
+        return mm;
     }
     @Override
     public List<MazeMovement> getActions(){
-        MazeMovement m1=new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.NONE);
         MazeMovement m2=new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.UP);
         MazeMovement m3=new MazeMovement(MazeMovement.Horizontal.NONE, MazeMovement.Vertical.DOWN);
         MazeMovement m4=new MazeMovement(MazeMovement.Horizontal.LEFT, MazeMovement.Vertical.NONE);
-        MazeMovement m5=new MazeMovement(MazeMovement.Horizontal.LEFT, MazeMovement.Vertical.UP);
-        MazeMovement m6=new MazeMovement(MazeMovement.Horizontal.LEFT, MazeMovement.Vertical.DOWN);
         MazeMovement m7=new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.NONE);
-        MazeMovement m8=new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.UP);
-        MazeMovement m9=new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.DOWN);
         List<MazeMovement> actions=new ArrayList<>();
-        if(isLegal(m1)){
-           actions.add(m1);
-        }
         if(isLegal(m2)){
             actions.add(m2);
         }
@@ -306,20 +326,8 @@ public class Maze implements State<MazeMovement>{
         if(isLegal(m4)){
             actions.add(m4);
         }
-        if(isLegal(m5)){
-            actions.add(m5);
-        }
-        if(isLegal(m6)){
-            actions.add(m6);
-        }
         if(isLegal(m7)){
             actions.add(m7);
-        }
-        if(isLegal(m8)){
-            actions.add(m8);
-        }
-        if(isLegal(m9)){
-            actions.add(m9);
         }
         return actions;
     }
@@ -331,21 +339,18 @@ public class Maze implements State<MazeMovement>{
 
     @Override
     public double getReward() {
-        // no reward for illegal actions
-        if(isDead){
 
-            return -1.0/x.size();
-        }
         // high reward for archiving the goal
         if((x.get(x.size()-1)==xExit && y.get(y.size()-1)==yExit)){
-            return x.size()*1000;
+            printState();
+            return 2*x.size();
         }else{
-            /*double val1=Math.abs(x.get(x.size()-1)-xExit);
-            val1*=val1;
-            double val2=Math.abs(y.get(y.size()-1)-yExit);
-            val2*=val2;
-            double reward=Math.sqrt(val1+val2);*/
-            return  x.size();
+           // System.out.println(x.size());
+            if(x.size()>Application.max){
+                Application.max=x.size();
+                printState();
+            }
+            return  x.size();//1.0/x.size();
         }
     }
 
@@ -354,7 +359,11 @@ public class Maze implements State<MazeMovement>{
         Obj[][] maze=getAgentMazeView();
         for(int x=0;x<maze.length;x++){
             for(int y=0;y<maze[x].length;y++){
-                System.out.print(maze[x][y].toString()+" ");
+                if(maze[x][y].equals(Obj.WALL)){
+                    System.out.print(" "+maze[x][y].toString() + "  ");
+                }else {
+                    System.out.print(maze[x][y].toString() + " ");
+                }
             }
             System.out.println();
         }

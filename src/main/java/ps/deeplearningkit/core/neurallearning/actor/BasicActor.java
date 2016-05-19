@@ -3,6 +3,7 @@ package ps.deeplearningkit.core.neurallearning.actor;
 import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.neat.NEATNetwork;
+import org.encog.neural.neat.NEATPopulation;
 import ps.deeplearningkit.core.simulator.debug.NeuralAction;
 import ps.deeplearningkit.core.simulator.Simulator;
 
@@ -31,7 +32,7 @@ public class BasicActor extends NeuralActor {
             }
         }
         track();
-        return 0;
+        return simulator.getReward();
     }
     private synchronized void track(){
         if(track){

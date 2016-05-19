@@ -7,6 +7,7 @@ import org.encog.ml.MLClassification;
 import org.encog.neural.art.ART1;
 import org.encog.neural.neat.NEATNetwork;
 
+import org.encog.neural.neat.NEATPopulation;
 import org.encog.neural.networks.BasicNetwork;
 import ps.deeplearningkit.core.MainController;
 import ps.deeplearningkit.core.analysis.heuristic.direction.search.DirectionSearch;
@@ -33,6 +34,8 @@ import ps.deeplearningkit.core.simulator.debug.NeuralStack;
 public class Application {
 
 	public static NoveltySearch ns=new NoveltySearch();
+	public static int max=Integer.MIN_VALUE;
+	public static Random random=new Random();
 	/**
 	 * Here the final state is used for evaluation of novelty.
 	 * @param args
@@ -63,12 +66,7 @@ public class Application {
 		NeuralActor neuralActor = new BasicActor(false, simulator);
 		CalculateScore someScore = new BasicScore(neuralActor, false, false);
 
-		MainController.getAdvancedNetworkController().createNEATPopulation(key, 101+4,4, 100);
-		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 999, 100);
-		NEATNetwork nnn = MainController.getAdvancedNetworkController().getBestNEATNetwork(key, someScore);
-
-		neuralActor.setTrack(true);
-		neuralActor.setMLMethod(nnn);
-		neuralActor.scoreActor();
+		MainController.getAdvancedNetworkController().createNEATPopulation(key, 9+1+4,4, 200);
+		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 25, 1000);
 	}
 }
