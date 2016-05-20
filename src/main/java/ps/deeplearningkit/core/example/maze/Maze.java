@@ -16,8 +16,6 @@ import java.util.Random;
  */
 public class Maze implements State<MazeMovement>{
 
-    private final int maxActions= Application.random.nextInt(50);
-
     private enum Obj {WALL,SPACE,START,EXIT,UNKNOWN,VISITED}
     private Obj[][] maze;
     // history of positions
@@ -28,7 +26,6 @@ public class Maze implements State<MazeMovement>{
     private int yExit;
 
     private boolean isDead=false;
-
     public Maze(){
         initMaze();
     }
@@ -50,11 +47,11 @@ public class Maze implements State<MazeMovement>{
         maze[0]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
         maze[1]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
         maze[2]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[3]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
-        maze[4]=new Obj[]{Obj.WALL,Obj.EXIT,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL};
-        maze[5]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL};
-        maze[6]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL};
-        maze[7]=new Obj[]{Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL};
+        maze[3]=new Obj[]{Obj.WALL,Obj.EXIT,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.WALL};
+        maze[4]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.WALL};
+        maze[5]=new Obj[]{Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL};
+        maze[6]=new Obj[]{Obj.SPACE,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL};
+        maze[7]=new Obj[]{Obj.SPACE,Obj.SPACE,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.SPACE,Obj.WALL};
         maze[8]=new Obj[]{Obj.WALL,Obj.START,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.SPACE,Obj.WALL,Obj.WALL};
         maze[9]=new Obj[]{Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL,Obj.WALL};
         initStartingPosition();
@@ -182,7 +179,7 @@ public class Maze implements State<MazeMovement>{
         maze=view;
 
         double[][] agentMaze=new double[maze.length][maze[0].length];
-        double val=1/6;
+        double val=1/3;
         for(int x=0;x<agentMaze.length;x++){
             for(int y=0;y<agentMaze[x].length;y++){
                 if(maze[x][y].equals(Obj.UNKNOWN)){
@@ -192,11 +189,11 @@ public class Maze implements State<MazeMovement>{
                 }else if(maze[x][y].equals(Obj.SPACE)){
                     agentMaze[x][y]=3*val;
                 }else if(maze[x][y].equals(Obj.VISITED)){
-                    agentMaze[x][y]=4*val;
+                    agentMaze[x][y]=-1*val;
                 }else if(maze[x][y].equals(Obj.START)){
-                    agentMaze[x][y]=5*val;
+                    agentMaze[x][y]=-2*val;
                 }else if(maze[x][y].equals(Obj.EXIT)){
-                    agentMaze[x][y]=6*val;
+                    agentMaze[x][y]=-3*val;
                 }
             }
         }
@@ -241,7 +238,8 @@ public class Maze implements State<MazeMovement>{
     public void applyAction(MazeMovement action) {
         if(!isDead) {
             if(action.transformX(0)==0 && action.transformY(0)==0){
-                return;
+               isDead=true;
+               return;
             }
             int x = action.transformX(this.x.get(this.x.size() - 1));
             int y = action.transformY(this.y.get(this.y.size() - 1));
@@ -293,13 +291,21 @@ public class Maze implements State<MazeMovement>{
 
     @Override
     public MazeMovement toAction(double[] action) {
-        int temp=0;
-        MazeMovement mm=null;
-        for(int i=0;i<Math.min(4,action.length);i++){
-            if(action[i]==1){
-                temp=i;
+        int temp;
+        if(action[0]>0){
+            if(action[1]>0){
+                temp=3;
+            }else {
+                temp=2;
+            }
+        }else{
+            if(action[1]<0){
+                temp=1;
+            }else {
+                temp=0;
             }
         }
+        MazeMovement mm=null;
         if(temp==0){
             mm= new MazeMovement(MazeMovement.Horizontal.RIGHT, MazeMovement.Vertical.NONE);
         }else if(temp==1){
@@ -335,14 +341,16 @@ public class Maze implements State<MazeMovement>{
 
     @Override
     public boolean isAbsorbing() {
-       return  isDead ||x.size()>maxActions|| (x.get(x.size()-1)==xExit && y.get(y.size()-1)==yExit);
+       return  isDead || (x.get(x.size()-1)==xExit && y.get(y.size()-1)==yExit);
     }
 
     @Override
     public double getReward() {
-
+        if(isDead && false){
+            return 0;
+        }
         // high reward for archiving the goal
-        if((x.get(x.size()-1)==xExit && y.get(y.size()-1)==yExit)){
+        else if((x.get(x.size()-1)==xExit && y.get(y.size()-1)==yExit)){
             printState();
             return 2*x.size();
         }else{

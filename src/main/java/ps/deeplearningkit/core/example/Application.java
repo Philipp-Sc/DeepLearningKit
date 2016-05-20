@@ -55,7 +55,7 @@ public class Application {
 		NeuralActor neuralActor = new BasicActor(false, simulator);
 		CalculateScore someScore = new BasicScore(neuralActor, false, false);
 
-		MainController.getAdvancedNetworkController().createNEATPopulation(key, 17,4, 500);
-		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 25, 100);
+		MainController.getAdvancedNetworkController().createNEATPopulation(key, 9+1,2, 3000);
+		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 25, 100000);
 	}
 }

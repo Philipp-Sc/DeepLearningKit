@@ -17,6 +17,7 @@ import org.encog.neural.hyperneat.substrate.SubstrateFactory;
 import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.neat.NEATPopulation;
 import org.encog.neural.neat.NEATUtil;
+import org.encog.neural.neat.training.NEATInnovation;
 import org.encog.neural.neat.training.species.OriginalNEATSpeciation;
 import org.encog.neural.networks.BasicNetwork;
 import org.encog.neural.networks.layers.BasicLayer;
@@ -175,7 +176,9 @@ public class AdvancedNetworkController extends NetworkController{
 	 */
 	public void createNEATPopulation(String key,int inputCount,int outputCount,int populationSize) throws IOException{
 		NEATPopulation pop=new NEATPopulation(inputCount, outputCount, populationSize);
-		pop.setNEATActivationFunction(new ActivationBiPolar());
+		pop.setNEATActivationFunction(new ActivationBipolarSteepenedSigmoid());
+		//pop.setActivationCycles(3);
+		//pop.setSurvivalRate(0.01);
 		pop.reset();
 		addNEATPopulation(key, pop);
 	}
