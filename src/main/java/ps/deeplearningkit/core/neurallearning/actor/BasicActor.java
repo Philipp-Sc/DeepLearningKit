@@ -16,6 +16,7 @@ import java.util.List;
 public class BasicActor extends NeuralActor {
 
     private Simulator simulator;
+    private int iterations=0;
     public BasicActor(boolean track, Simulator simulator){
         super(track);
         this.simulator=simulator;
@@ -24,12 +25,14 @@ public class BasicActor extends NeuralActor {
     @Override
     public synchronized double scoreActor() {
         simulator.initEpisode();
-        while(!simulator.isAbsorbing()){
+        iterations=0;
+        while(!simulator.isAbsorbing() || iterations<20){
             if(bn instanceof NEATNetwork){
                 MLData input= new BasicMLData(simulator.getInput());
                 MLData output=((NEATNetwork) this.bn).compute(input);
                 simulator.applyAction(output.getData());
             }
+            iterations++;
         }
         track();
         return simulator.getReward();

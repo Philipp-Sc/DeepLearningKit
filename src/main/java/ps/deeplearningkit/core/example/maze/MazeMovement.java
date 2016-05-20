@@ -11,50 +11,9 @@ public class MazeMovement {
     private Horizontal horizontal;
     private Vertical vertical;
 
-    public MazeMovement(int action){
-        switch (action){
-            case 1:
-                this.horizontal=Horizontal.NONE;
-                this.vertical=Vertical.NONE;
-                break;
-            case 2:
-                this.horizontal=Horizontal.NONE;
-                this.vertical=Vertical.DOWN;
-                break;
-            case 3:
-                this.horizontal=Horizontal.NONE;
-                this.vertical=Vertical.UP;
-                break;
-            case 4:
-                this.horizontal=Horizontal.LEFT;
-                this.vertical=Vertical.NONE;
-                break;
-            case 5:
-                this.horizontal=Horizontal.LEFT;
-                this.vertical=Vertical.DOWN;
-                break;
-            case 6:
-                this.horizontal=Horizontal.LEFT;
-                this.vertical=Vertical.UP;
-                break;
-            case 7:
-                this.horizontal=Horizontal.RIGHT;
-                this.vertical=Vertical.NONE;
-                break;
-            case 8:
-                this.horizontal=Horizontal.RIGHT;
-                this.vertical=Vertical.DOWN;
-                break;
-            case 9:
-                this.horizontal=Horizontal.RIGHT;
-                this.vertical=Vertical.UP;
-                break;
-        }
-    }
     public MazeMovement(Horizontal horizontal, Vertical vertical){
         this.horizontal=horizontal;
         this.vertical=vertical;
-       // printAction();
     }
     public int transformX(int x){
         if(vertical==Vertical.NONE){
@@ -74,7 +33,7 @@ public class MazeMovement {
             return y;
         }else if(horizontal==Horizontal.LEFT) {
             //System.out.println("y:Left");
-            return y - 1;
+            return y-1;
         }else {
            // System.out.println("y:Right");
             return y+1;
