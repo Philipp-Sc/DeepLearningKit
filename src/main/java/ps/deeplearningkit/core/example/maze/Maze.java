@@ -9,8 +9,6 @@ import ps.deeplearningkit.core.simulator.State;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 /**
  * Created by philipp on 5/16/16.
  */
@@ -197,7 +195,9 @@ public class Maze implements State<MazeMovement>{
                 }
             }
         }
-        double[] vector=new double[(maze.length*maze[0].length)+1];
+        // maze, dead, position x,y, time, last action.
+
+        double[] vector=new double[(maze.length*maze[0].length)+1+1+1+1+2];
         int i=0;
         for(double[] each:agentMaze){
             for(double e:each){
@@ -206,9 +206,39 @@ public class Maze implements State<MazeMovement>{
             }
         }
         if(isDead){
-            vector[i]=0;
+            vector[i]=-1;
         }else{
             vector[i]=1;
+        }
+        i++;
+        double xVal;
+        if(x.get(x.size()-1)!=0){
+            xVal=1.0/x.get(x.size()-1);
+        }else {
+            xVal=-1;
+        }
+        vector[i]=xVal;
+        i++;
+        double yVal;
+        if(y.get(y.size()-1)!=0){
+            yVal=1.0/y.get(y.size()-1);
+        }else {
+            yVal=-1;
+        }
+        vector[i]=yVal;
+        i++;
+
+        double time=1.0/x.size();
+        vector[i]=time;
+        i++;
+        if(x.size()-2>=0){
+            vector[i]=1.0/x.get(x.size()-2);
+            i++;
+            vector[i]=1.0/y.get(y.size()-2);
+        }else{
+            vector[i]=-1;
+            i++;
+            vector[i]=-1;
         }
         return new RealVectorBehavior(vector);
     }
@@ -237,25 +267,31 @@ public class Maze implements State<MazeMovement>{
     @Override
     public void applyAction(MazeMovement action) {
         if(!isDead) {
-            if(action.transformX(0)==0 && action.transformY(0)==0){
-               isDead=true;
-               return;
-            }
             int x = action.transformX(this.x.get(this.x.size() - 1));
             int y = action.transformY(this.y.get(this.y.size() - 1));
+
+            if(this.x.get(this.x.size()-1)==x && this.y.get(this.y.size()-1)==y){
+                isDead=true;
+                return;
+            }
+
             if(this.x.size()>=2){
                 if(this.x.get(this.x.size()-2)==x && this.y.get(this.y.size()-2)==y){
                     isDead=true;
                     return;
                 }
             }
-            if (x >= 0 && x < maze.length && y >= 0 && y < maze[0].length) {
-                if (maze[x][y].equals(Obj.WALL)) {
-                    isDead = true;
-                }else{
-                   // System.out.println("x:"+x+"y:"+y);
-                    this.x.add(x);
-                    this.y.add(y);
+            if (x >= 0 && x < maze.length) {
+                if(y >= 0 && y < maze[x].length) {
+                    if (maze[x][y].equals(Obj.WALL)) {
+                        isDead = true;
+                    } else {
+                        // System.out.println("x:"+x+"y:"+y);
+                        this.x.add(x);
+                        this.y.add(y);
+                    }
+                }else {
+                    isDead=true;
                 }
             } else {
                 // index out of bounds
@@ -265,25 +301,31 @@ public class Maze implements State<MazeMovement>{
     }
     private boolean isLegal(MazeMovement action){
         if(!isDead) {
-            if(action.transformX(0)==0 && action.transformY(0)==0){
-                return false;
-            }
             int x = action.transformX(this.x.get(this.x.size() - 1));
             int y = action.transformY(this.y.get(this.y.size() - 1));
+
+            if(this.x.get(this.x.size()-1)==x && this.y.get(this.y.size()-1)==y){
+                return false;
+            }
+
             if(this.x.size()>=2){
                 if(this.x.get(this.x.size()-2)==x && this.y.get(this.y.size()-2)==y){
                     return false;
                 }
             }
-            if (x >= 0 && x < maze.length && y >= 0 && y < maze[0].length) {
-                if (maze[x][y].equals(Obj.WALL)) {
-                   return false;
-                }else{
-                    return true;
+            if (x >= 0 && x < maze.length) {
+                if(y >= 0 && y < maze[x].length) {
+                    if (maze[x][y].equals(Obj.WALL)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }else {
+                    return false;
                 }
             } else {
                 // index out of bounds
-               return false;
+                return false;
             }
         }
         return false;

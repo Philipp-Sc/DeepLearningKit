@@ -24,6 +24,8 @@ public class Application {
 	public static NoveltySearch ns=new NoveltySearch();
 	public static int max=Integer.MIN_VALUE;
 	public static Random random=new Random();
+
+	public static double maxScore=0;
 	/**
 	 * Here the final state is used for evaluation of novelty.
 	 * @param args
@@ -55,7 +57,7 @@ public class Application {
 		NeuralActor neuralActor = new BasicActor(false, simulator);
 		CalculateScore someScore = new BasicScore(neuralActor, false, false);
 
-		MainController.getAdvancedNetworkController().createNEATPopulation(key, 9+1,2, 3000);
-		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 25, 100000);
+		MainController.getAdvancedNetworkController().createNEATPopulation(key, 9+1+1+1+1+2,2, 1000);
+		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 15, 10000000);
 	}
 }
