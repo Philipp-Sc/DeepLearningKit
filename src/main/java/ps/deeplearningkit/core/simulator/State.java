@@ -21,7 +21,7 @@ public interface State<T> {
     T toAction(double[] action);
 
     boolean isAbsorbing();
-    double getReward();
+    double getFitnessReward();
 
     void printState();
 }

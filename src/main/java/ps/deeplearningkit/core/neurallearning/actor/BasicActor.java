@@ -4,6 +4,7 @@ import org.encog.ml.data.MLData;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.neural.neat.NEATNetwork;
 import org.encog.neural.neat.NEATPopulation;
+import org.encog.neural.networks.BasicNetwork;
 import ps.deeplearningkit.core.example.Application;
 import ps.deeplearningkit.core.simulator.debug.NeuralAction;
 import ps.deeplearningkit.core.simulator.Simulator;
@@ -26,18 +27,24 @@ public class BasicActor extends NeuralActor {
     @Override
     public synchronized double scoreActor() {
         simulator.initEpisode();
-        iterations=-1* (int)Application.maxScore;
-        while(!simulator.isAbsorbing() || iterations<2){
+        iterations=0;//-1* (int)Application.maxScore;
+        while(!simulator.isAbsorbing() || iterations<=-1){
             if(bn instanceof NEATNetwork){
                 MLData input= new BasicMLData(simulator.getInput());
                 MLData output=((NEATNetwork) this.bn).compute(input);
                 simulator.applyAction(output.getData());
+            }else if(bn instanceof BasicNetwork){
+                MLData input= new BasicMLData(simulator.getInput());
+                MLData output=((BasicNetwork) this.bn).compute(input);
+                simulator.applyAction(output.getData());
             }
             iterations++;
         }
-        track();
         double score=simulator.getReward();
-        Application.maxScore=score;
+        if(score>Application.maxScore){
+            track();
+            Application.maxScore=score;
+        }
         return score;
     }
     private synchronized void track(){

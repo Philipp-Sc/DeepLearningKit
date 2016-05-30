@@ -6,6 +6,7 @@ import org.encog.ml.CalculateScore;
 import org.encog.ml.MLClassification;
 import org.encog.neural.art.ART1;
 import ps.deeplearningkit.core.MainController;
+import ps.deeplearningkit.core.analysis.heuristic.RewardStrategy;
 import ps.deeplearningkit.core.analysis.heuristic.direction.search.DirectionSearch;
 import ps.deeplearningkit.core.analysis.heuristic.junction.search.JunctionSearch;
 import ps.deeplearningkit.core.example.maze.ClassificationNetwork;
@@ -34,30 +35,37 @@ public class Application {
 	public static void main(String[] args) throws Exception{
 		String key="key";
 		State<MazeMovement> state=new Maze();
-		//NoveltySearch noveltySearch=new NoveltySearch();
+		RewardStrategy noveltySearch=new NoveltySearch();
 
 		//MainController.getSimpleNetworkController().createART1("art1",1,1,1);
 
-		//MLClassification classification1=MainController.getSimpleNetworkController().getART1Network("art1");
-		//UncommonSearch uncommonSearch=new UncommonSearch(classification1);
-		//uncommonSearch.setPrecision(10000);
 
 		//ClassificationNetwork classificationNetwork=new ClassificationNetwork((ART1) classification1,1);
 
-		//JunctionSearch junctionSearch=new JunctionSearch();
-		//DirectionSearch directionSearch=new DirectionSearch();
+		ps.deeplearningkit.core.simulator.Simulator simulator=new SmartSimulator<MazeMovement>(state);
 
-		ps.deeplearningkit.core.simulator.Simulator simulator=new SmartSimulator<MazeMovement>(state,
-				null,
-				null,
-				null,
-				null,
-				null);
+		((SmartSimulator)simulator).setRewardStrategy(noveltySearch);
 
-		NeuralActor neuralActor = new BasicActor(false, simulator);
+		NeuralActor neuralActor = new BasicActor(true, simulator);
 		CalculateScore someScore = new BasicScore(neuralActor, false, false);
+		//MainController.getAdvancedNetworkController().createBasicNetwork(key, 9+1+1+1+1+2,2);
+		//MainController.getAdvancedNetworkController().trainBasicNetwork(key,someScore,1000,10,20,100000);
+		MainController.getAdvancedNetworkController().createNEATPopulation(key, 9+1+1+1+1+2,2, 100);
+		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 22, 1000000);
+	/*
+		MLClassification classification1=MainController.getSimpleNetworkController().getART1Network("art1");
+		UncommonSearch uncommonSearch=new UncommonSearch(classification1);
+		uncommonSearch.setPrecision(10000);
+		((SmartSimulator)simulator).setRewardStrategy(uncommonSearch);
+		// train one network with uncommonSearch
 
-		MainController.getAdvancedNetworkController().createNEATPopulation(key, 9+1+1+1+1+2,2, 1000);
-		MainController.getAdvancedNetworkController().trainNEATPopulation(key, someScore, 15, 10000000);
+		JunctionSearch junctionSearch=new JunctionSearch();
+		((SmartSimulator)simulator).setRewardStrategy(junctionSearch);
+		// train one network with junctionsearch
+
+		DirectionSearch directionSearch=new DirectionSearch();
+		((SmartSimulator)simulator).setRewardStrategy(directionSearch);
+		// train one network with direction search
+		*/
 	}
 }

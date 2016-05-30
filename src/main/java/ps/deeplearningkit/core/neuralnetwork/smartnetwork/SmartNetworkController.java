@@ -40,18 +40,9 @@ public class SmartNetworkController extends SimpleNetworkController{
      */
     public void createBasicMLAgent(String key,
                                    State state,
-                                   MLClassification classification,
                                    NoveltySearch noveltySearch,
-                                   UncommonSearch uncommonSearch,
-                                   DirectionSearch directionSearch,
-                                   JunctionSearch junctionSearch,
                                    CalculateScore someScore) throws IOException {
-        Simulator simulator=new SmartSimulator<Object>(state,
-                classification,
-                noveltySearch,
-                uncommonSearch,
-                junctionSearch,
-                directionSearch);
+        Simulator simulator=new SmartSimulator<Object>(state);
 
         NeuralActor neuralActor = new BasicActor(true, simulator);
         MainController.getAdvancedNetworkController().createNEATPopulation(key, 26, 4, 1500);

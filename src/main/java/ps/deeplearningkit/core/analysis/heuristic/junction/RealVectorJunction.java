@@ -20,7 +20,11 @@ public abstract class RealVectorJunction extends BasicJunction{
     @Override
     public double distanceFrom(Behavior b) {
         //return  vector.getL1Distance(b.getVector())/maxDistance;
-        return vector.getDistance(b.getVector())/maxDistance;
+        double distance=vector.getDistance(b.getVector());
+        if(distance==0){
+            return 0;
+        }
+        return distance/maxDistance;
     }
     @Override
     public double defaultThreshold() {

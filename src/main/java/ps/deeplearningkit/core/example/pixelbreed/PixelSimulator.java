@@ -63,7 +63,7 @@ public class PixelSimulator implements Simulator {
         for(PixelState each:nextStates){
             Behavior behavior= new RealVectorBehavior(each.toVector());
             ns.addToCurrentPopulation(behavior);
-            sumOfNovelty+=ns.testNovelty(behavior);
+            sumOfNovelty+=ns.testBehavior(behavior);
         }
         return sumOfNovelty/nextStates.size();
     }

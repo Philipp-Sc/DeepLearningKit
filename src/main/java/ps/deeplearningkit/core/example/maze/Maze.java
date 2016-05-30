@@ -177,7 +177,7 @@ public class Maze implements State<MazeMovement>{
         maze=view;
 
         double[][] agentMaze=new double[maze.length][maze[0].length];
-        double val=1/3;
+        double val=1.0/3;
         for(int x=0;x<agentMaze.length;x++){
             for(int y=0;y<agentMaze[x].length;y++){
                 if(maze[x][y].equals(Obj.UNKNOWN)){
@@ -232,9 +232,17 @@ public class Maze implements State<MazeMovement>{
         vector[i]=time;
         i++;
         if(x.size()-2>=0){
-            vector[i]=1.0/x.get(x.size()-2);
+            if(x.get(x.size()-2)>0){
+                vector[i]=1.0/x.get(x.size()-2);
+            }else{
+                vector[i]=0;
+            }
             i++;
-            vector[i]=1.0/y.get(y.size()-2);
+            if(y.get(y.size()-2)>0){
+                vector[i]=1.0/y.get(y.size()-2);
+            }else{
+                vector[i]=0;
+            }
         }else{
             vector[i]=-1;
             i++;
@@ -386,8 +394,13 @@ public class Maze implements State<MazeMovement>{
        return  isDead || (x.get(x.size()-1)==xExit && y.get(y.size()-1)==yExit);
     }
 
+    private boolean isSteppingStone(){
+        // if novelty is high
+        return true;
+    }
+
     @Override
-    public double getReward() {
+    public double getFitnessReward() {
         if(isDead && false){
             return 0;
         }

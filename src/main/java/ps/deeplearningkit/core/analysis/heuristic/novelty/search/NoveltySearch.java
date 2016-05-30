@@ -1,7 +1,7 @@
 package ps.deeplearningkit.core.analysis.heuristic.novelty.search;
 
 import ps.deeplearningkit.core.analysis.heuristic.Behavior;
-
+import ps.deeplearningkit.core.analysis.heuristic.RewardStrategy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,7 +17,7 @@ import java.util.List;
  * 
  * @author Most of the code was taken from OliverColeman @see at github: /ahni/src/com/ojcoleman/ahni/evaluation/novelty/
  */
-public class NoveltySearch {
+public class NoveltySearch implements RewardStrategy{
 
 	/**
 	 * The number of nearest neighbors to consider when determining the sparseness
@@ -72,7 +72,7 @@ public class NoveltySearch {
 	 * @param behavior
 	 * @return novelty in the range from [0,1].
 	 */
-	public double testNovelty(Behavior behavior){
+	public double testBehavior(Behavior behavior){
 		int behaviorsCount=toArchive.size()+population.size();
 		double[] distanceOfBehavior=new double[behaviorsCount];
 		int index=0;
